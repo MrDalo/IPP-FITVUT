@@ -1,9 +1,23 @@
 <?php
+/**
+ * Project: IPP22
+ * @author Dalibor Kralik, xkrali20
+ * @brief Module which process program arguments
+ * 
+ * @file programArguments.php
+ */
 
+
+
+
+/**
+ * @brief Function which process program arguments
+ * @use call processArgument() in external modules
+ * 
+ */
 function processArgument()
 {
     global $argc, $argv;
-
 
     if($argc == 2)
     {
