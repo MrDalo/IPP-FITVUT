@@ -58,43 +58,99 @@ function argumentPoccessing($xml, $inputArray, $operationCodeLine)
         fwrite(STDERR, "ERROR 23 - Other lexicalor syntax ERROR -> non-equal correct parameters number\n");
         exit(23);
     }
-    
+
+    if(count($inputArray) == 1)
+    {
+        return $xml;
+    }
+
+
     for($i = 1; $i < count($inputArray); $i++)
     {
-        if(operationCode[$operationCodeLine] == 'var')
+        if(operationCode[$operationCodeLine][$i] == 'var')
         {
-            if(preg_match('/^(GF|TF|LF)@[a-zA-Z0-9_\-\$&%\*\!\?]+$/', $inputArray[$i]))
+            if(preg_match('/^(GF|TF|LF)@[ěščřžýáíéóúůďťňĎŇŤŠČŘŽÝÁÍÉÚŮĚÓa-zA-Z0-9_\-\$&%\*\!\?]+$/', $inputArray[$i]))
             {
+                $xml->startElement("arg$i");
+                $xml->writeAttribute('type', 'var');
+                $xml->text($inputArray[$i]);
+                $xml->endElement();
 
             }
             else
             {
-                fwrite(STDERR, "ERROR 23 - Other lexicalor syntax ERROR -> invalid variable\n");
+                fwrite(STDERR, "ERROR 23 - Other lexical or syntax ERROR -> invalid variable\n");
                 exit(23);
             }
             //TODO extrakcia do XML
 
         }
-        else if(operationCode[$operationCodeLine] == 'symb')
+        else if(operationCode[$operationCodeLine][$i] == 'symb')
         {
-            
+            if(preg_match('/^(GF|TF|LF)@[ěščřžýáíéóúůďťňĎŇŤŠČŘŽÝÁÍÉÚŮĚÓa-zA-Z0-9_\-\$&%\*\!\?]+$/', $inputArray[$i]))
+            {
+                $xml->startElement("arg$i");
+                $xml->writeAttribute('type', 'var');
+                $xml->text($inputArray[$i]);
+                $xml->endElement();
+            }
+            else if(preg_match('#^(nil|bool|int|string)@[ěščřžýáíéóúůďťňĎŇŤŠČŘŽÝÁÍÉÚŮĚÓa-zA-Z0-9_\-\$&%\*\!\?\\\<\>;\/]+$#', $inputArray[$i]))
+            {
+                $split = preg_split('/@/',$inputArray[$i], -1, PREG_SPLIT_NO_EMPTY);
+                $xml->startElement("arg$i");
+                $xml->writeAttribute('type', $split[0]);
+                if($split[0] == 'bool')
+                    $xml->text(strtolower($split[1]));
+                else
+                    $xml->text($split[1]);
+                $xml->endElement();
+            }
+            else
+            {
+                fwrite(STDERR, "ERROR 23 - Other lexical or syntax ERROR -> invalid symb\n");
+                exit(23);
+            }
+
             
         }
-        else if(operationCode[$operationCodeLine] == 'label')
+        else if(operationCode[$operationCodeLine][$i] == 'label')
         {
-            if(preg_match('/^[a-zA-Z0-9_\-\$&%\*\!\?]+$/', $inputArray[$i]))
+            if(preg_match('/^[ěščřžýáíéóúůďťňĎŇŤŠČŘŽÝÁÍÉÚŮĚÓa-zA-Z0-9_\-\$&%\*\!\?]+$/', $inputArray[$i]))
             {
+                $xml->startElement("arg$i");
+                $xml->writeAttribute('type', 'label');
+                $xml->text($inputArray[$i]);
+                $xml->endElement();
 
             }
             else
             {
-                fwrite(STDERR, "ERROR 23 - Other lexicalor syntax ERROR -> invalid label\n");
+                fwrite(STDERR, "ERROR 23 - Other lexical or syntax ERROR -> invalid label\n");
                 exit(23);
             }
             //TODO extrakcia do XML
+        }
+        else if(operationCode[$operationCodeLine][$i] == 'type')
+        {
+            if(preg_match('/^(nil|int|bool|string)$/', $inputArray[$i]))
+            {
+                $xml->startElement("arg$i");
+                $xml->writeAttribute('type', 'type');
+                $xml->text($inputArray[$i]);
+                $xml->endElement();
+
+            }
+            else
+            {
+                fwrite(STDERR, "ERROR 23 - Other lexical or syntax ERROR -> invalid type\n");
+                exit(23);
+            }
+
         }
 
     }
+    //echo "return \n";
+    return $xml;
 
 
 }
@@ -114,7 +170,9 @@ function endOfXML($xml)
 {
     $xml->endElement();
     $xml->endDocument();
-    file_put_contents('output.xml', $xml->outputMemory());
+    //file_put_contents(STDOUT, $xml->outputMemory());
+    fwrite(STDOUT,$xml->outputMemory());
+    //echo $xml->outputMemory();
 }    
 
 
@@ -154,6 +212,7 @@ while(($line = fgets(STDIN)) != false)
 {
     if(!$IDheader)
     {
+        $lineWithoutHastag = preg_replace('/#.*/','', $line);
         if(preg_match('/(^\s*.IPPcode22\s*(\s$|#)|^\s*.IPPcode22$)/i', $line))
         {
             $IDheader = true;
@@ -166,7 +225,7 @@ while(($line = fgets(STDIN)) != false)
 
 
         }
-        else  if(preg_match('/(^\s+#|^#|^\s+\s$)/i', $line))
+        else  if(preg_match('/(^\s+$)/i', $lineWithoutHastag))
         {
             // znaci prazdny riadok
             fwrite(STDERR, "Empty line: $numberOfLine\n");
@@ -181,15 +240,18 @@ while(($line = fgets(STDIN)) != false)
     }
     else
     {
+        //echo "In else of line number: $numberOfLine\n";
             //odstranenie komentaru z nacitaneho riadku, komentar nebudem nidky potrebovat
         $inputArray = preg_replace('/#.*/','', $line);
 
             //Ak sa jedna o prazdny riadok, tak skip
-        if(preg_match('/(^\s+#|^#|^\s+\s$)/i', $line, $matches))
+        if(preg_match('/(^\s+$)/i', $inputArray))
         {
             //SKIP
+            //echo "SKIP line number: $numberOfLine\n";
         }
         else{
+            //echo "Working on line number: $numberOfLine\n";
                 //rozdelenie vstupneho riadku do pola podla bielych znakov, komentare su uz v tomto momente odstranene
             $inputArray = preg_split('/[\s+]/', $inputArray, -1, PREG_SPLIT_NO_EMPTY);
          
@@ -209,7 +271,7 @@ while(($line = fgets(STDIN)) != false)
 
                 //XML spracovanie argumentu
 
-            argumentPoccessing($xml, $inputArray, $validOperationReturn[1]);
+            $xml = argumentPoccessing($xml, $inputArray, $validOperationReturn[1]);
             
 
             $xml->endElement();
