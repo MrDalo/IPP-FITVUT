@@ -10,13 +10,13 @@
     
         global $b;
         $a = 10;
-        echo "$a\n";
+        //echo "$a\n";
         $b = 1222;
 
     }
 
-
-    processArgument();
+echo "1";
+    //processArgument();
 
 //hy();
 
