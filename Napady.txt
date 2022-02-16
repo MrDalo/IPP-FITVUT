@@ -1,0 +1,5 @@
+1. Kde najdem znenie --help? Mam si ho vymysliet sam? Co sa tam ma vlastne nachadzat ked parser.php ma jeden jediny prepinac alebo nema prepinac?
+
+Postup: 1. Automaticke vypisanie XML hlavicky - nasledujem korenovy element PROGRAM s atributom LANGUAGE s hondotou IPPcode22.
+	2. Instrukcie su zabalene v elemente INSTRUCTION s povinnym atributom ORDER, atribute OPCODE - obsahuje hondotu operacneho kodu(operaciu z IPPcode22)
+	3. Vnutri elementu INSTRUCTION su elemeny ARG.., ktore udavaju argumenty danej operacie. ARG.. maju povinny atribute TYPE, ktory udava datovy typ argumentu
