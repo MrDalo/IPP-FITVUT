@@ -260,7 +260,7 @@ while(($line = fgets(STDIN)) != false)
                 //Skontrolovanie operaceho kodu
             if($validOperationReturn[1] == -1)
             {
-                fwrite(STDERR, "ERROR 21 - Bad or unknown operation code in source file\n");
+                fwrite(STDERR, "ERROR 22 - Bad or unknown operation code in source file\n");
                 exit(22);
             }
             
