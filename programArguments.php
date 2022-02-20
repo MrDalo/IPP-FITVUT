@@ -8,8 +8,6 @@
  */
 
 
-
-
 /**
  * @brief Function which process program arguments
  * @use call processArgument() in external modules
@@ -27,9 +25,10 @@ function processArgument()
             echo("This is Help section of parser.php\n");
             echo("=====================================\n\n");
             echo("This program supports just one argument\n\n");
-            echo("      --help      -shows help section of parser.php\n\n");
+            echo("      --help      -shows help section of parser.php\n\n\n");
             echo("=====================================\n\n");
-            echo("The program can by run be \$php parser.php [--help]\n");
+            echo("The program can by run as:\n");
+            echo "      \$php parser.php [--help]\n\n";
             echo("=====================================\n\n");
             exit(0);
         }
@@ -46,8 +45,6 @@ function processArgument()
     }
 
 }
-
-//processArgument();
 
 
 ?>
