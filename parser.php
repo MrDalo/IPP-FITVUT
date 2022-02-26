@@ -126,7 +126,14 @@ function argumentPoccessing($xml, $inputArray, $operationCodeLine)
                 $split = preg_split('/@/',$inputArray[$i], -1, PREG_SPLIT_NO_EMPTY);
                 $xml->startElement("arg$i");
                 $xml->writeAttribute('type', $split[0]);
-                $xml->text($split[1]);
+                if(count($split) < 2)
+                {
+                    $xml->text('');
+                }
+                else
+                {
+                    $xml->text($split[1]);
+                }
                 $xml->endElement();
             }
             else
