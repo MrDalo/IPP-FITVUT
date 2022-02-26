@@ -115,7 +115,7 @@ function argumentPoccessing($xml, $inputArray, $operationCodeLine)
                 $xml->text($inputArray[$i]);
                 $xml->endElement();
             }
-            else if(preg_match('/^string@([^\s\\#]|\\\d{3})+$/', $inputArray[$i]) ||
+            else if(preg_match('/^string@([^\s#\\\\]|\\\\\d{3})+$/', $inputArray[$i]) ||
                     preg_match('#^nil@nil$#', $inputArray[$i]) ||
                     preg_match('#^bool@(true|false)$#', $inputArray[$i]) ||
                     preg_match('#^int@-?[0-9]+$#', $inputArray[$i]))
