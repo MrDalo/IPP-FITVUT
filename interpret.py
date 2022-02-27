@@ -1,15 +1,51 @@
 import argparse
-#from pickle import NONE
+from pickle import NONE
 import sys
 import xml.etree.ElementTree as ET
 
-from cv2 import insertChannel
 
 
 
 class xmlReader:
 
     instrucionOrder = 1
+    instructions ={
+        "MOVE": ["var", "symb"],
+        "CREATEFRAME": [None],
+        "PUSHFRAME": [None],
+        "POPFRAME": [None],
+        "DEFVAR": ["var"],
+        "CALL": ["label"],
+        "RETURN": [None],
+        "PUSHS": ["symb"],
+        "POPS": ["var"],
+        "ADD": ["var", "symb", "symb"],
+        "SUB": ["var", "symb", "symb"],
+        "MUL": ["var", "symb", "symb"],
+        "IDIV": ["var", "symb", "symb"],
+        "LT": ["var", "symb", "symb"],
+        "GT": ["var", "symb", "symb"],
+        "EQ": ["var", "symb", "symb"],
+        "AND": ["var", "symb", "symb"],
+        "OR": ["var", "symb", "symb"],
+        "NOT": ["var", "symb", "symb"],
+        "INT2CHAR": ["var", "symb"],
+        "STRI2INT": ["var", "symb", "symb"],
+        "READ": ["var", "type"],
+        "WRITE": ["symb"],
+        "CONCAT": ["var", "symb", "symb"],
+        "STRLEN": ["var", "symb"],
+        "GETCHAR": ["var", "symb", "symb"],
+        "SETCHAR": ["var", "symb", "symb"],
+        "TYPE": ["var", "symb"],
+        "LABEL": ["label"],
+        "JUMP": ["label"],
+        "JUMPIFEQ": ["label", "symb", "symb"],
+        "JUMPIFNEQ": ["label", "symb", "symb"],
+        "EXIT": ["symb"],
+        "DPRINT": ["symb"],
+        "BREAK": [None]
+    }
 
     def __init__(self, sourceFile):
         if(sourceFile != None):
@@ -35,6 +71,9 @@ class xmlReader:
             print("Error - invalide instruction order", file = sys.stderr)
             exit(32)
 
+    def getOpcode(self, instruction):
+        return instruction.attrib.get('opcode')
+
     
         
 
@@ -59,11 +98,15 @@ def arguments():
     return source, input
 
 
+
+
+
 def programmeRunner(sourceFile):
     reader = xmlReader(sourceFile)
     
     for instruction in reader.root.iter('instruction'):
         reader.orderChecker(instruction.attrib.get('order'))
+        opcode = reader.getOpcode(instruction)
             
         
 
