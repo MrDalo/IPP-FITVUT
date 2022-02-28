@@ -4,11 +4,13 @@ import sys
 import xml.etree.ElementTree as ET
 
 
+class symtable:
+    
+    def __init__(self):
+        pass
 
 
-class xmlReader:
-
-    instrucionOrder = 1
+class interpreter:
     instructions ={
         "MOVE": ["var", "symb"],
         "CREATEFRAME": [None],
@@ -47,6 +49,85 @@ class xmlReader:
         "BREAK": [None]
     }
 
+    def __init__(self):
+        pass
+
+    def instructionOpeartions(self, opcode):
+        #print(self.instructions.keys())
+        if opcode == list(self.instructions.keys())[0]:
+            pass
+        elif opcode == list(self.instructions.keys())[1]:
+            pass
+        elif opcode == list(self.instructions.keys())[2]:
+            pass
+        elif opcode == list(self.instructions.keys())[3]:
+            pass
+        elif opcode == list(self.instructions.keys())[4]:
+            pass
+        elif opcode == list(self.instructions.keys())[5]:
+            pass
+        elif opcode == list(self.instructions.keys())[6]:
+            pass
+        elif opcode == list(self.instructions.keys())[7]:
+            pass
+        elif opcode == list(self.instructions.keys())[8]:
+            pass
+        elif opcode == list(self.instructions.keys())[10]:
+            pass
+        elif opcode == list(self.instructions.keys())[11]:
+            pass
+        elif opcode == list(self.instructions.keys())[12]:
+            pass
+        elif opcode == list(self.instructions.keys())[13]:
+            pass
+        elif opcode == list(self.instructions.keys())[14]:
+            pass
+        elif opcode == list(self.instructions.keys())[15]:
+            pass
+        elif opcode == list(self.instructions.keys())[16]:
+            pass
+        elif opcode == list(self.instructions.keys())[17]:
+            pass
+        elif opcode == list(self.instructions.keys())[18]:
+            pass
+        elif opcode == list(self.instructions.keys())[19]:
+            pass
+        elif opcode == list(self.instructions.keys())[20]:
+            pass
+        elif opcode == list(self.instructions.keys())[21]:
+            pass
+        elif opcode == list(self.instructions.keys())[22]:
+            pass
+        elif opcode == list(self.instructions.keys())[23]:
+            pass
+        elif opcode == list(self.instructions.keys())[24]:
+            pass
+        elif opcode == list(self.instructions.keys())[25]:
+            pass
+        elif opcode == list(self.instructions.keys())[26]:
+            pass
+        elif opcode == list(self.instructions.keys())[27]:
+            pass
+        elif opcode == list(self.instructions.keys())[28]:
+            pass
+        elif opcode == list(self.instructions.keys())[29]:
+            pass
+        elif opcode == list(self.instructions.keys())[30]:
+            pass
+        elif opcode == list(self.instructions.keys())[31]:
+            pass
+        elif opcode == list(self.instructions.keys())[32]:
+            pass
+        elif opcode == list(self.instructions.keys())[33]:
+            pass
+        elif opcode == list(self.instructions.keys())[34]:
+            pass
+
+
+class xmlReader:
+
+    instructionOrder = 0
+
     def __init__(self, sourceFile):
         if(sourceFile != None):
             try:
@@ -64,8 +145,8 @@ class xmlReader:
 
 
     def orderChecker(self, externalOrder):
-        if self.instrucionOrder == externalOrder:
-            ++self.instrucionOrder
+        if int(self.instructionOrder) < int(externalOrder):
+            self.instructionOrder = externalOrder
             return True
         else:
             print("Error - invalide instruction order", file = sys.stderr)
@@ -73,6 +154,12 @@ class xmlReader:
 
     def getOpcode(self, instruction):
         return instruction.attrib.get('opcode')
+
+    def isXMLCorrect(self):
+        if self.root.findall('arg1') or self.root.findall('arg2') or self.root.findall('arg3') :
+            print("Error - invalid XML", file = sys.stderr)
+            exit(32)
+
 
     
         
@@ -98,15 +185,28 @@ def arguments():
     return source, input
 
 
-
+def sortingCrit(instruction):
+    return instruction.attrib.get('order')
 
 
 def programmeRunner(sourceFile):
     reader = xmlReader(sourceFile)
+    interpret = interpreter()
+    listOfInstructions=[]
+
     
+        # Checking correct XML structure
+    reader.isXMLCorrect()
+
+        # Creating listOfInstrucitons
+        # TODO osetrit chyba 31
     for instruction in reader.root.iter('instruction'):
+        listOfInstructions.append(instruction)
+    
+        # Sorting of instructions and check order
+    listOfInstructions.sort(key=sortingCrit)
+    for instruction in listOfInstructions:
         reader.orderChecker(instruction.attrib.get('order'))
-        opcode = reader.getOpcode(instruction)
             
         
 
