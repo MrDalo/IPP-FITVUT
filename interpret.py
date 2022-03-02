@@ -160,32 +160,59 @@ class xmlReader:
             print("Error - invalid XML", file = sys.stderr)
             exit(32)
 
+        if self.root.tag != "program" or self.root.attrib.get('language') != "IPPcode22":
+            print("Error - invalid XML program attribute", file = sys.stderr)
+            exit(31)
+
+        # TODO check xml version and encoding
+
 
     
-        
 
+def arguments():    
+    isHelp = False
+    source= None
+    input = None
+    isProgram = False
 
+    if len(sys.argv) > 3 :
+        print("Error in arguments", file = sys.stderr)
+        exit(10)
+    for arg in sys.argv:
+        if isProgram:
+            if(arg.find('--source=') != -1):
+                source = arg.replace('--source=', '')
+            elif (arg.find('--input=') != -1):
+                input = arg.replace('--input=', '')
+            elif(arg.find('--help') != -1):
+                isHelp = True
+            else:
+                print("Error in arguments", file = sys.stderr)
+                exit(10)
+        isProgram = True
 
-def arguments():
-    parser = argparse.ArgumentParser(add_help=False, description="IPP interpret.py by Dalibor Kralik")
-        # TODO poriesit kombinciu --help a dalsich argumentov
-    parser.add_argument('--help', action='help', help='source file of program')
-    parser.add_argument('--source', help='source file of program')
-    parser.add_argument('--input', help='input file of program')
-    args = parser.parse_args()
+    if isHelp and (source != None or input != None):
+        print("Error in arguments", file = sys.stderr)
+        exit(10)
     
-
-    source = args.source
-    input = args.input
-    if (source == None and input==None):
+    if isHelp:
+        print("IPP interpret.py by Dalibor Kralik")
+        print("")
+        print("Optional arguments:")
+        print("     --help              write help of the program")
+        print("     --source  SOURCE    source file of the program")
+        print("     --input   INPUT     input file of the program")
+        exit(0)
+    
+    if source == None and input == None:
         print("Error in arguments", file = sys.stderr)
         exit(10)
 
-
     return source, input
+    
 
 
-def sortingCrit(instruction):
+def sortingCriteria(instruction):
     return instruction.attrib.get('order')
 
 
@@ -198,17 +225,18 @@ def programmeRunner(sourceFile):
         # Checking correct XML structure
     reader.isXMLCorrect()
 
+
+
         # Creating listOfInstrucitons
-        # TODO osetrit chyba 31
     for instruction in reader.root.iter('instruction'):
         listOfInstructions.append(instruction)
     
         # Sorting of instructions and check order
-    listOfInstructions.sort(key=sortingCrit)
+    listOfInstructions.sort(key=sortingCriteria)
     for instruction in listOfInstructions:
         reader.orderChecker(instruction.attrib.get('order'))
             
-        
+    # TODO  Prechadzanie instrukcii
 
 
 if __name__ == '__main__':
