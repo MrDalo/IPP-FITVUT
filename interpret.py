@@ -3,6 +3,8 @@ from pickle import NONE
 import sys
 import xml.etree.ElementTree as ET
 
+from numpy import trim_zeros
+
 
 
 class frame:
@@ -32,7 +34,10 @@ class symtable:
     def popFrame(self):
         popedFrame = self.items.pop()
         popedFrame.type = 2
-        return popedFrame
+        self.LF = popedFrame
+    
+    def createFrame(self):
+        self.LF = frame("2")
 
     def pushFrame(self, frame):
         frame.type = 1
@@ -283,20 +288,31 @@ def programmeRunner(sourceFile):
     
         # Sorting of instructions and check order
     listOfInstructions.sort(key=sortingCriteria)
-
-    arrayOfLabels=[]
+    arrayOfLabels={}
+    
+    counterIndex = -1
     for instruction in listOfInstructions:
+        counterIndex = counterIndex + 1
         reader.orderChecker(instruction.attrib.get('order'))
+
             # check redefinition of LABEL
         if((instruction.attrib.get('opcode').upper()) == "LABEL"):
-            if instruction.find('arg1').text in arrayOfLabels:
-                print("Error - redefinition of LABEL", file = sys.stderr)
-                exit(52)
-                # append LABEL to the arrayOFLabels
-            arrayOfLabels.append(instruction.find('arg1').text)
+            try:
+                if(arrayOfLabels[instruction.find('arg1').text]):
+                    print("Error - redefinition of LABEL", file = sys.stderr)
+                    exit(52)
+            except:
+                arrayOfLabels[instruction.find('arg1').text] = counterIndex 
+
 
     print(arrayOfLabels)        
+    # TODO ak budem kontrolovat existenciu LABELu, pouzi pole arrayOfLabels cez try-except a hlada kluc
     # TODO  Prechadzanie instrukcii
+    
+    for i in range(len(listOfInstructions)):
+        pass
+
+
 
 
 if __name__ == '__main__':

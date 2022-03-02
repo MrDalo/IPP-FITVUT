@@ -118,7 +118,7 @@ function argumentPoccessing($xml, $inputArray, $operationCodeLine)
             else if(preg_match('/^string@([^\s#\\\\]|\\\\\d{3})*$/', $inputArray[$i]) ||
                     preg_match('#^nil@nil$#', $inputArray[$i]) ||
                     preg_match('#^bool@(true|false)$#', $inputArray[$i]) ||
-                    preg_match('#^int@-?[0-9]+$#', $inputArray[$i]))
+                    preg_match('#^int@[-+]?[0-9]+$#', $inputArray[$i]))
             {
                     //replace invalid XML characters to valid escape sequece
                 $inputArray[$i] = replaceInvalidXML($inputArray[$i]);
