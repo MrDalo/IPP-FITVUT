@@ -4,10 +4,60 @@ import sys
 import xml.etree.ElementTree as ET
 
 
+
+class frame:
+    types={
+        0: "GF",
+        1: "LF",
+        2: "TF"
+    }
+
+    def __init__(self, type):
+        self.type = type
+        self.items={}
+        self.len = 0
+
 class symtable:
+    LF = None
     
     def __init__(self):
-        pass
+        self.items = []
+        self.items.append(frame("0"))
+        self.maxIndex = 0
+    
+    
+    def appendItem(self, itemKey, itemValue, itemDataType):
+        self.items[self.maxIndex].items[itemKey] = [itemValue,itemDataType]
+
+    def popFrame(self):
+        popedFrame = self.items.pop()
+        popedFrame.type = 2
+        return popedFrame
+
+    def pushFrame(self, frame):
+        frame.type = 1
+        self.items.append(frame)
+
+    def findItem(self, item, frame):
+        if frame == 0:
+            try:
+                return self.items[0].items[item]
+            except:
+                return False
+        elif frame == 1:
+            try:
+                return self.items[self.maxIndex].items[item]
+            except:
+                return False
+        elif frame == 2:
+                try:
+                    return self.LF.items[item]
+                except:
+                    return False
+        else:
+            print("Internal ERROR", file = sys.stderr)
+            exit(99)
+
 
 
 class interpreter:
@@ -213,7 +263,7 @@ def arguments():
 
 
 def sortingCriteria(instruction):
-    return instruction.attrib.get('order')
+    return int(instruction.attrib.get('order'))
 
 
 def programmeRunner(sourceFile):
@@ -233,9 +283,19 @@ def programmeRunner(sourceFile):
     
         # Sorting of instructions and check order
     listOfInstructions.sort(key=sortingCriteria)
+
+    arrayOfLabels=[]
     for instruction in listOfInstructions:
         reader.orderChecker(instruction.attrib.get('order'))
-            
+            # check redefinition of LABEL
+        if((instruction.attrib.get('opcode').upper()) == "LABEL"):
+            if instruction.find('arg1').text in arrayOfLabels:
+                print("Error - redefinition of LABEL", file = sys.stderr)
+                exit(52)
+                # append LABEL to the arrayOFLabels
+            arrayOfLabels.append(instruction.find('arg1').text)
+
+    print(arrayOfLabels)        
     # TODO  Prechadzanie instrukcii
 
 
