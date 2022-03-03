@@ -285,7 +285,7 @@ while(($line = fgets(STDIN)) != false)
         {
             $IDheader = true;
             $numberOfLine++;
-            fwrite(STDERR, "Header loaded successfully: $numberOfLine\n");
+            //fwrite(STDERR, "Header loaded successfully: $numberOfLine\n");
                 
                 //Generovanie zakladneho XML
             $xml = startOfXML($xml);
@@ -293,7 +293,7 @@ while(($line = fgets(STDIN)) != false)
         else  if(preg_match('/(^\s+$)/i', $lineWithoutHastag))
         {
             // znaci prazdny riadok
-            fwrite(STDERR, "Empty line: $numberOfLine\n");
+            //fwrite(STDERR, "Empty line: $numberOfLine\n");
         }
         else
         {
