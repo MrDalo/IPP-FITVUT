@@ -6,7 +6,6 @@ import xml.etree.ElementTree as ET
 from numpy import trim_zeros
 
 
-
 class frame:
     types={
         0: "GF",
@@ -19,53 +18,94 @@ class frame:
         self.items={}
         self.len = 0
 
-class symtable:
-    LF = None
+class symtableClass:
+    TF = None
     
     def __init__(self):
         self.items = []
-        self.items.append(frame("0"))
+        self.items.append(frame("GF"))
         self.maxIndex = 0
-    
-    
-    def appendItem(self, itemKey, itemValue, itemDataType):
-        self.items[self.maxIndex].items[itemKey] = [itemValue,itemDataType]
 
     def popFrame(self):
+        if self.maxIndex < 1:
+            print("Error - Unexisted LF frame", file = sys.stderr)
+            exit(55)
+
         popedFrame = self.items.pop()
-        popedFrame.type = 2
-        self.LF = popedFrame
+        popedFrame.type = "TF"
+        self.TF = popedFrame
+        self.maxIndex = self.maxIndex - 1
     
     def createFrame(self):
-        self.LF = frame("2")
+        self.TF = frame("TF")
 
     def pushFrame(self, frame):
-        frame.type = 1
+        frame.type = "LF"
         self.items.append(frame)
+        self.TF = None
+        self.maxIndex = self.maxIndex + 1
 
-    def findItem(self, item, frame):
-        if frame == 0:
+    def findItem(self, item):
+        varSplit = item.split("@")
+        frame = varSplit[0]
+        if frame == "GF":
             try:
-                return self.items[0].items[item]
+                return self.items[0].items[varSplit[1]]
             except:
                 return False
-        elif frame == 1:
+        elif frame == "LF":
+            if self.maxIndex < 1:
+                print("Error - Unexisted LF frame", file = sys.stderr)
+                exit(55)
+
             try:
-                return self.items[self.maxIndex].items[item]
+                return self.items[self.maxIndex].items[varSplit[1]]
             except:
                 return False
-        elif frame == 2:
-                try:
-                    return self.LF.items[item]
-                except:
-                    return False
+        elif frame == "TF":
+            if self.TF == None:
+                print("Error - Unexisted TF frame", file = sys.stderr)
+                exit(55)
+            try:
+                return self.TF.items[varSplit[1]]
+            except:
+                return False
         else:
             print("Internal ERROR", file = sys.stderr)
             exit(99)
 
+    def updateItem(self, item, newValue, newDataType):
+        varSplit = item.split("@")
+        frame = varSplit[0]
+        variableName = varSplit[1]
+        if frame == "LF":
+            self.TF.items[variableName] = [newValue, newDataType]
+        elif frame == "GF":
+            self.items[0].items[variableName] = [newValue, newDataType]
+        else:
+            self.items[self.maxIndex].items[variableName] = [newValue, newDataType]
+
+
+
+
+    #TODO prerobit, nesedi to napr pri tvorbe GF premennej, treba asi rozifovat
+    def appendItem(self, itemKey, itemValue, itemDataType, frame):
+        newVariable = frame+"@"+itemKey
+        if not self.findItem(newVariable):
+            self.items[self.maxIndex].items[itemKey] = [itemValue,itemDataType]
+        else:
+            print("Error - redefinition of variable", file = sys.stderr)
+            exit(52)
+
 
 
 class interpreter:
+    
+    def __init__(self, arrayOfLabels):
+        self.symtable = symtableClass()
+        self.arrayOfLabels = arrayOfLabels
+
+
     instructions ={
         "MOVE": ["var", "symb"],
         "CREATEFRAME": [None],
@@ -104,22 +144,83 @@ class interpreter:
         "BREAK": [None]
     }
 
-    def __init__(self):
-        pass
+    def isVariable(arg):
+        if arg.attrib.get('type').text == "var":
+            return True
+        else:
+            return False   
 
-    def instructionOpeartions(self, opcode):
+    def isLabel(arg):
+        if arg.attrib.get('type').text == "label":
+            return True
+        else:
+            return False   
+
+    def isConstant(arg):
+        if arg.attrib.get('type').text == "string" or arg.attrib.get('type').text == "bool" or arg.attrib.get('type').text == "nil" or arg.attrib.get('type').text == "int":
+            return True
+        else:
+            return False  
+
+    def isString(arg):
+        if arg.attrib.get('type').text == "string":
+            return True
+        else:
+            return False 
+
+
+    def instructionOpeartions(self, opcode,instruction, i):
         #print(self.instructions.keys())
-        if opcode == list(self.instructions.keys())[0]:
+        if opcode == list(self.instructions.keys())[0]: #MOVE
+
+            if self.isVariable(instruction.find('arg1')):
+                var = instruction.find('arg1').text
+                symtableItem = self.symtable.findItem(var)
+                if not symtableItem:
+                    print("Error - Unexisted variable", file = sys.stderr)
+                    exit(54)
+                else:
+                    varDataType = symtableItem[1]
+
+            else:
+                print("Error - bad operand type", file = sys.stderr)
+                exit(53)
+
+            if self.isVariable(instruction.find('arg2')):
+                symbIsVar = True
+                symb = instruction.find('arg2').text
+                symtableItem = self.symtable.findItem(symb)
+                if not symtableItem:
+                    print("Error - Unexisted variable", file = sys.stderr)
+                    exit(54)
+                else:
+                    symbDataType = symtableItem[1]
+                    symbValue = symtableItem[0]
+
+            elif self.isConstant(instruction.find('arg2')):
+                symbIsVar = False
+                symb = instruction.find('arg2').text
+                symbDataType = instruction.find('arg2').attrib.get('type').text
+
+            else:
+                print("Error - bad operand type", file = sys.stderr)
+                exit(53)
+            
+            if symbIsVar:
+                self.symtable.updateItem(var,symbValue, symbDataType)
+            else:
+                self.symtable.updateItem(var,symb, symbDataType)
+
+            
+        elif opcode == list(self.instructions.keys())[1]:#CRETEFRAME
+            self.symtable.createFrame()
+        elif opcode == list(self.instructions.keys())[2]:#PUSHFRAME
+            self.symtable.pushFrame(self.symtable.TF)
+        elif opcode == list(self.instructions.keys())[3]:#POPFRAME
+            self.symtable.popFrame()
+        elif opcode == list(self.instructions.keys())[4]:#DEFVAR
             pass
-        elif opcode == list(self.instructions.keys())[1]:
-            pass
-        elif opcode == list(self.instructions.keys())[2]:
-            pass
-        elif opcode == list(self.instructions.keys())[3]:
-            pass
-        elif opcode == list(self.instructions.keys())[4]:
-            pass
-        elif opcode == list(self.instructions.keys())[5]:
+        elif opcode == list(self.instructions.keys())[5]:#CALL
             pass
         elif opcode == list(self.instructions.keys())[6]:
             pass
@@ -177,6 +278,7 @@ class interpreter:
             pass
         elif opcode == list(self.instructions.keys())[34]:
             pass
+        return i+1
 
 
 class xmlReader:
@@ -271,15 +373,15 @@ def sortingCriteria(instruction):
     return int(instruction.attrib.get('order'))
 
 
+
 def programmeRunner(sourceFile):
     reader = xmlReader(sourceFile)
-    interpret = interpreter()
     listOfInstructions=[]
 
     
         # Checking correct XML structure
     reader.isXMLCorrect()
-
+    arrayOfLabels = {}
 
 
         # Creating listOfInstrucitons
@@ -288,7 +390,6 @@ def programmeRunner(sourceFile):
     
         # Sorting of instructions and check order
     listOfInstructions.sort(key=sortingCriteria)
-    arrayOfLabels={}
     
     counterIndex = -1
     for instruction in listOfInstructions:
@@ -305,13 +406,14 @@ def programmeRunner(sourceFile):
                 arrayOfLabels[instruction.find('arg1').text] = counterIndex 
 
 
-    print(arrayOfLabels)        
+    #print(arrayOfLabels)        
     # TODO ak budem kontrolovat existenciu LABELu, pouzi pole arrayOfLabels cez try-except a hlada kluc
     # TODO  Prechadzanie instrukcii
-    
-    for i in range(len(listOfInstructions)):
-        pass
 
+    interpret = interpreter(arrayOfLabels)
+    for i in range(len(listOfInstructions)):
+        i = interpret.instructionOpeartions(listOfInstructions[i].attrib.get('opcode').upper(),listOfInstructions[i], i)
+    
 
 
 
