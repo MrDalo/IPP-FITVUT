@@ -1,14 +1,26 @@
+direc ={
+    'ahoj': 1,
+    'ako':2
+}
+i = 5
+try:
+    i = direc['sa']
+except:
+    print('nic')
 
-var = None
-if var:
-    print("ahoj")
-else:
-    print("cau")
+print(i)
 
-if (var := 5+5):
-    print("ahoj")
+if i:
+    ahoj = "cau"
 
-array = [1,2]
-print(len(array))
-array = []
-print(len(array))
+print(ahoj)
+
+def func():
+    return 1,2,3
+
+a,b,c = func()
+
+print(a,b,c)
+arr = [[1,"ahoj"], [2, "kamo"]]
+t = arr.pop()
+print(t[0])

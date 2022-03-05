@@ -108,6 +108,7 @@ class interpreter:
     def __init__(self, arrayOfLabels):
         self.symtable = symtableClass()
         self.arrayOfLabels = arrayOfLabels
+        self.stack = []
 
 
     instructions ={
@@ -148,29 +149,52 @@ class interpreter:
         "BREAK": [None]#34
     }
 
-    def isVariable(arg):
-        if arg.attrib.get('type').text == "var":
+    def isVariable(self, arg):
+        if arg.attrib.get('type') == "var":
             return True
         else:
             return False   
 
-    def isLabel(arg):
-        if arg.attrib.get('type').text == "label":
+    def isLabel(self, arg):
+        if arg.attrib.get('type') == "label":
             return True
         else:
             return False   
 
-    def isConstant(arg):
-        if arg.attrib.get('type').text == "string" or arg.attrib.get('type').text == "bool" or arg.attrib.get('type').text == "nil" or arg.attrib.get('type').text == "int":
+    def isConstant(self, arg):
+        if arg.attrib.get('type') == "string" or arg.attrib.get('type') == "bool" or arg.attrib.get('type') == "nil" or arg.attrib.get('type') == "int":
             return True
         else:
             return False  
 
-    def isString(arg):
-        if arg.attrib.get('type').text == "string":
+    def isString(self, arg):
+        if arg.attrib.get('type') == "string":
             return True
         else:
             return False 
+
+    def isSymb(self, instruction, argNumber):
+        if self.isVariable(instruction.find(argNumber)):
+            symbIsVar = True
+            symb = instruction.find(argNumber).text
+            symtableItem = self.symtable.findItem(symb)
+
+            if not symtableItem:
+                print("Error - Unexisted variable", file = sys.stderr)
+                exit(54)
+            else:
+                symbDataType = symtableItem[1]
+                symbValue = symtableItem[0]
+
+        elif self.isConstant(instruction.find(argNumber)):
+            symbIsVar = False
+            symbValue = instruction.find(argNumber).text
+            symbDataType = instruction.find(argNumber).attrib.get('type')
+
+        else:
+            print("Error - bad operand type", file = sys.stderr)
+            exit(53)
+        return symbIsVar, symbValue, symbDataType
 
 
     def instructionOpeartions(self, opcode,instruction, i):
@@ -192,6 +216,7 @@ class interpreter:
                 print("Error - bad operand type", file = sys.stderr)
                 exit(53)
 
+            symbIsVar = False
             if self.isVariable(instruction.find('arg2')):
                 symbIsVar = True
                 symb = instruction.find('arg2').text
@@ -207,7 +232,7 @@ class interpreter:
             elif self.isConstant(instruction.find('arg2')):
                 symbIsVar = False
                 symb = instruction.find('arg2').text
-                symbDataType = instruction.find('arg2').attrib.get('type').text
+                symbDataType = instruction.find('arg2').attrib.get('type')
 
             else:
                 print("Error - bad operand type", file = sys.stderr)
@@ -237,13 +262,45 @@ class interpreter:
                 print("Error - bad operand type", file = sys.stderr)
                 exit(53)
         elif opcode == list(self.instructions.keys())[5]:#CALL
-            pass
+            self.stack.append([i, 'label'])
+            if self.isLabel(instruction.find('arg1')):
+                try:
+                    i = self.arrayOfLabels[instruction.find('arg1').text]
+                except:
+                    print("Error - Undefined LABEL call", file = sys.stderr)
+                    exit(52)
+
+            else:
+                print("Error - Call without valid LABEL", file = sys.stderr)
+                exit(53)
+
         elif opcode == list(self.instructions.keys())[6]:#RETURN
-            pass
+            if len(self.stack) > 0:
+                poppedValue = self.stack.pop()
+                i = poppedValue[0]
+            else:
+                print("Error - Empty stack", file = sys.stderr)
+                exit(56)
+
+
         elif opcode == list(self.instructions.keys())[7]:#PUSHS
-            pass
+            symbIsVar, symbValue, symbDataType = self.isSymb(instruction, 'arg1')
+            #TODO osetrit None ak sa jedna o premennu, treba poriesit co s praznou premennou v symtable
+            self.stack.append([symbValue, symbDataType])
+
         elif opcode == list(self.instructions.keys())[8]:#POPS
-            pass
+            if len(self.stack) > 0:
+                if self.isVariable(instruction.find('arg1')):
+                    poppedValue = self.stack.pop()
+                    self.symtable.updateItem(instruction.find('arg1').text, poppedValue[0], poppedValue[1])
+                else:
+                    print("Error - bad operand type", file = sys.stderr)
+                    exit(53)
+
+            else:
+                print("Error - Empty stack", file = sys.stderr)
+                exit(56)
+
         elif opcode == list(self.instructions.keys())[9]:#ADD
             pass
         elif opcode == list(self.instructions.keys())[10]:#SUB
