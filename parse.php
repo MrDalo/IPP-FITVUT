@@ -36,7 +36,7 @@ const operationCode = [
         ['AND', 'var', 'symb', 'symb'],
         ['OR', 'var', 'symb', 'symb'],
         ['NOT', 'var', 'symb', 'symb'],
-        ['INT2CAHR', 'var', 'symb'],
+        ['INT2CHAR', 'var', 'symb'],
         ['STRI2INT', 'var', 'symb', 'symb'],
         ['READ', 'var', 'type'],
         ['WRITE', 'symb'],
@@ -47,7 +47,7 @@ const operationCode = [
         ['TYPE','var', 'symb'],
         ['LABEL', 'label'],
         ['JUMP', 'label'],
-        ['JUMPOFQE', 'label', 'symb', 'symb'],
+        ['JUMPIFEQ', 'label', 'symb', 'symb'],
         ['JUMPIFNEQ', 'label', 'symb', 'symb'],
         ['EXIT', 'symb'],
         ['DPRINT', 'symb'],
@@ -170,7 +170,7 @@ function argumentPoccessing($xml, $inputArray, $operationCodeLine)
                     //replace invalid XML characters to valid escape sequece
                 $inputArray[$i] = replaceInvalidXML($inputArray[$i]);
                 
-                $split = preg_split('/@/',$inputArray[$i], -1, PREG_SPLIT_NO_EMPTY);
+                $split = preg_split('/@/',$inputArray[$i], 2, PREG_SPLIT_NO_EMPTY);
                 $xml->startElement("arg$i");
                 $xml->writeAttribute('type', $split[0]);
                 if(count($split) < 2)
