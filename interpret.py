@@ -22,8 +22,8 @@ class symtableClass:
     TF = None
     
     def __init__(self):
-        self.items = []
-        self.items.append(frame("GF"))
+        self.frames = []
+        self.frames.append(frame("GF"))
         self.maxIndex = 0
 
     def popFrame(self):
@@ -31,7 +31,7 @@ class symtableClass:
             print("Error - Unexisted LF frame", file = sys.stderr)
             exit(55)
 
-        popedFrame = self.items.pop()
+        popedFrame = self.frames.pop()
         popedFrame.type = "TF"
         self.TF = popedFrame
         self.maxIndex = self.maxIndex - 1
@@ -41,7 +41,7 @@ class symtableClass:
 
     def pushFrame(self, frame):
         frame.type = "LF"
-        self.items.append(frame)
+        self.frames.append(frame)
         self.TF = None
         self.maxIndex = self.maxIndex + 1
 
@@ -50,7 +50,7 @@ class symtableClass:
         frame = varSplit[0]
         if frame == "GF":
             try:
-                return self.items[0].items[varSplit[1]]
+                return self.frames[0].items[varSplit[1]]
             except:
                 return False
         elif frame == "LF":
@@ -59,7 +59,7 @@ class symtableClass:
                 exit(55)
 
             try:
-                return self.items[self.maxIndex].items[varSplit[1]]
+                return self.frames[self.maxIndex].items[varSplit[1]]
             except:
                 return False
         elif frame == "TF":
@@ -81,20 +81,24 @@ class symtableClass:
         if frame == "LF":
             self.TF.items[variableName] = [newValue, newDataType]
         elif frame == "GF":
-            self.items[0].items[variableName] = [newValue, newDataType]
+            self.frames[0].items[variableName] = [newValue, newDataType]
         else:
-            self.items[self.maxIndex].items[variableName] = [newValue, newDataType]
+            self.frames[self.maxIndex].items[variableName] = [newValue, newDataType]
 
 
 
-
-    #TODO prerobit, nesedi to napr pri tvorbe GF premennej, treba asi rozifovat
-    def appendItem(self, itemKey, itemValue, itemDataType, frame):
-        newVariable = frame+"@"+itemKey
-        if not self.findItem(newVariable):
-            self.items[self.maxIndex].items[itemKey] = [itemValue,itemDataType]
+    def appendItem(self,item):
+        varSplit = item.split("@")
+        if not self.findItem(item):
+            if varSplit[0] == "GF":
+                self.frames[0].items[varSplit[1]] = [None, None]                
+            elif varSplit[0] == "LF":
+                self.frames[self.maxIndex].items[varSplit[1]] = [None, None]                
+            else:
+                self.TF.items[varSplit[1]] = [None, None]                
+        
         else:
-            print("Error - redefinition of variable", file = sys.stderr)
+            print("Error - Redefinition of variable", file = sys.stderr)
             exit(52)
 
 
@@ -107,41 +111,41 @@ class interpreter:
 
 
     instructions ={
-        "MOVE": ["var", "symb"],
-        "CREATEFRAME": [None],
-        "PUSHFRAME": [None],
-        "POPFRAME": [None],
-        "DEFVAR": ["var"],
-        "CALL": ["label"],
-        "RETURN": [None],
-        "PUSHS": ["symb"],
-        "POPS": ["var"],
-        "ADD": ["var", "symb", "symb"],
-        "SUB": ["var", "symb", "symb"],
-        "MUL": ["var", "symb", "symb"],
-        "IDIV": ["var", "symb", "symb"],
-        "LT": ["var", "symb", "symb"],
-        "GT": ["var", "symb", "symb"],
-        "EQ": ["var", "symb", "symb"],
-        "AND": ["var", "symb", "symb"],
-        "OR": ["var", "symb", "symb"],
-        "NOT": ["var", "symb", "symb"],
-        "INT2CHAR": ["var", "symb"],
-        "STRI2INT": ["var", "symb", "symb"],
-        "READ": ["var", "type"],
-        "WRITE": ["symb"],
-        "CONCAT": ["var", "symb", "symb"],
-        "STRLEN": ["var", "symb"],
-        "GETCHAR": ["var", "symb", "symb"],
-        "SETCHAR": ["var", "symb", "symb"],
-        "TYPE": ["var", "symb"],
-        "LABEL": ["label"],
-        "JUMP": ["label"],
-        "JUMPIFEQ": ["label", "symb", "symb"],
-        "JUMPIFNEQ": ["label", "symb", "symb"],
-        "EXIT": ["symb"],
-        "DPRINT": ["symb"],
-        "BREAK": [None]
+        "MOVE": ["var", "symb"],#0
+        "CREATEFRAME": [None],#1
+        "PUSHFRAME": [None],#2
+        "POPFRAME": [None],#3
+        "DEFVAR": ["var"],#4
+        "CALL": ["label"],#5
+        "RETURN": [None],#6
+        "PUSHS": ["symb"],#7
+        "POPS": ["var"],#8
+        "ADD": ["var", "symb", "symb"],#9
+        "SUB": ["var", "symb", "symb"],#10
+        "MUL": ["var", "symb", "symb"],#11
+        "IDIV": ["var", "symb", "symb"],#12
+        "LT": ["var", "symb", "symb"],#13
+        "GT": ["var", "symb", "symb"],#14
+        "EQ": ["var", "symb", "symb"],#15
+        "AND": ["var", "symb", "symb"],#16
+        "OR": ["var", "symb", "symb"],#17
+        "NOT": ["var", "symb", "symb"],#18
+        "INT2CHAR": ["var", "symb"],#19
+        "STRI2INT": ["var", "symb", "symb"],#20
+        "READ": ["var", "type"],#21
+        "WRITE": ["symb"],#22
+        "CONCAT": ["var", "symb", "symb"],#23
+        "STRLEN": ["var", "symb"],#24
+        "GETCHAR": ["var", "symb", "symb"],#25
+        "SETCHAR": ["var", "symb", "symb"],#26
+        "TYPE": ["var", "symb"],#27
+        "LABEL": ["label"],#28
+        "JUMP": ["label"],#29
+        "JUMPIFEQ": ["label", "symb", "symb"],#30
+        "JUMPIFNEQ": ["label", "symb", "symb"],#31
+        "EXIT": ["symb"],#32
+        "DPRINT": ["symb"],#33
+        "BREAK": [None]#34
     }
 
     def isVariable(arg):
@@ -170,12 +174,14 @@ class interpreter:
 
 
     def instructionOpeartions(self, opcode,instruction, i):
-        #print(self.instructions.keys())
+        
         if opcode == list(self.instructions.keys())[0]: #MOVE
 
             if self.isVariable(instruction.find('arg1')):
+
                 var = instruction.find('arg1').text
                 symtableItem = self.symtable.findItem(var)
+
                 if not symtableItem:
                     print("Error - Unexisted variable", file = sys.stderr)
                     exit(54)
@@ -190,6 +196,7 @@ class interpreter:
                 symbIsVar = True
                 symb = instruction.find('arg2').text
                 symtableItem = self.symtable.findItem(symb)
+
                 if not symtableItem:
                     print("Error - Unexisted variable", file = sys.stderr)
                     exit(54)
@@ -214,69 +221,80 @@ class interpreter:
             
         elif opcode == list(self.instructions.keys())[1]:#CRETEFRAME
             self.symtable.createFrame()
+
         elif opcode == list(self.instructions.keys())[2]:#PUSHFRAME
             self.symtable.pushFrame(self.symtable.TF)
+
         elif opcode == list(self.instructions.keys())[3]:#POPFRAME
             self.symtable.popFrame()
+
         elif opcode == list(self.instructions.keys())[4]:#DEFVAR
-            pass
+            if self.isVariable(instruction.find('arg1')):
+                var = instruction.find('arg1').text
+                self.symtable.appendItem(var)
+
+            else:
+                print("Error - bad operand type", file = sys.stderr)
+                exit(53)
         elif opcode == list(self.instructions.keys())[5]:#CALL
             pass
-        elif opcode == list(self.instructions.keys())[6]:
+        elif opcode == list(self.instructions.keys())[6]:#RETURN
             pass
-        elif opcode == list(self.instructions.keys())[7]:
+        elif opcode == list(self.instructions.keys())[7]:#PUSHS
             pass
-        elif opcode == list(self.instructions.keys())[8]:
+        elif opcode == list(self.instructions.keys())[8]:#POPS
             pass
-        elif opcode == list(self.instructions.keys())[10]:
+        elif opcode == list(self.instructions.keys())[9]:#ADD
             pass
-        elif opcode == list(self.instructions.keys())[11]:
+        elif opcode == list(self.instructions.keys())[10]:#SUB
             pass
-        elif opcode == list(self.instructions.keys())[12]:
+        elif opcode == list(self.instructions.keys())[11]:#MUL
             pass
-        elif opcode == list(self.instructions.keys())[13]:
+        elif opcode == list(self.instructions.keys())[12]:#IDIV
             pass
-        elif opcode == list(self.instructions.keys())[14]:
+        elif opcode == list(self.instructions.keys())[13]:#LT
             pass
-        elif opcode == list(self.instructions.keys())[15]:
+        elif opcode == list(self.instructions.keys())[14]:#GT
             pass
-        elif opcode == list(self.instructions.keys())[16]:
+        elif opcode == list(self.instructions.keys())[15]:#EQ
             pass
-        elif opcode == list(self.instructions.keys())[17]:
+        elif opcode == list(self.instructions.keys())[16]:#AND
             pass
-        elif opcode == list(self.instructions.keys())[18]:
+        elif opcode == list(self.instructions.keys())[17]:#OR
             pass
-        elif opcode == list(self.instructions.keys())[19]:
+        elif opcode == list(self.instructions.keys())[18]:#NOT
             pass
-        elif opcode == list(self.instructions.keys())[20]:
+        elif opcode == list(self.instructions.keys())[19]:#INT2CHAR
             pass
-        elif opcode == list(self.instructions.keys())[21]:
+        elif opcode == list(self.instructions.keys())[20]:#STRI2INT
             pass
-        elif opcode == list(self.instructions.keys())[22]:
+        elif opcode == list(self.instructions.keys())[21]:#READ
             pass
-        elif opcode == list(self.instructions.keys())[23]:
+        elif opcode == list(self.instructions.keys())[22]:#WRITE
             pass
-        elif opcode == list(self.instructions.keys())[24]:
+        elif opcode == list(self.instructions.keys())[23]:#CONCAT
             pass
-        elif opcode == list(self.instructions.keys())[25]:
+        elif opcode == list(self.instructions.keys())[24]:#STRLEN
             pass
-        elif opcode == list(self.instructions.keys())[26]:
+        elif opcode == list(self.instructions.keys())[25]:#GETCHAR
             pass
-        elif opcode == list(self.instructions.keys())[27]:
+        elif opcode == list(self.instructions.keys())[26]:#SETCHAR
             pass
-        elif opcode == list(self.instructions.keys())[28]:
+        elif opcode == list(self.instructions.keys())[27]:#TYPE
             pass
-        elif opcode == list(self.instructions.keys())[29]:
+        elif opcode == list(self.instructions.keys())[28]:#LABEL
             pass
-        elif opcode == list(self.instructions.keys())[30]:
+        elif opcode == list(self.instructions.keys())[29]:#JUMP
             pass
-        elif opcode == list(self.instructions.keys())[31]:
+        elif opcode == list(self.instructions.keys())[30]:#JUMPIFEQ
             pass
-        elif opcode == list(self.instructions.keys())[32]:
+        elif opcode == list(self.instructions.keys())[31]:#JUMPIFNEQ
             pass
-        elif opcode == list(self.instructions.keys())[33]:
+        elif opcode == list(self.instructions.keys())[32]:#EXIT
             pass
-        elif opcode == list(self.instructions.keys())[34]:
+        elif opcode == list(self.instructions.keys())[33]:#DPRINT
+            pass
+        elif opcode == list(self.instructions.keys())[34]:#BREAK
             pass
         return i+1
 
