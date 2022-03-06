@@ -26,3 +26,9 @@ t = arr.pop()
 print(t[0])
 
 print(5//2)
+
+if 'auto' < 'auta':
+    print("I ma in")
+
+integer = 5
+print(str(integer))

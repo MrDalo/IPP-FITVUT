@@ -377,19 +377,164 @@ class interpreter:
 
             
         elif opcode == list(self.instructions.keys())[13]:#LT
-            pass
+            if not self.isVariable(instruction.find('arg1')):
+                print("Error - bad operand type", file = sys.stderr)
+                exit(53)
+            else:
+                if not self.symtable.findItem(instruction.find('arg1').text):
+                    print("Error - Unexisted variable", file = sys.stderr)
+                    exit(54)
+            
+            symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
+            symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
+            if symbDataType1 != symbDataType2:
+                print("Error - Not same operands types", file = sys.stderr)
+                exit(53)
+
+            if symbDataType1 != 'int':
+                if int(symbValue1) < int(symbValue2):
+                    self.symtable.updateItem(instruction.find('arg1').text, 'true', 'bool')
+                else:
+                    self.symtable.updateItem(instruction.find('arg1').text, 'false', 'bool')
+            else:
+                if symbValue1 < symbValue2:
+                    self.symtable.updateItem(instruction.find('arg1').text, 'true', 'bool')
+                else:
+                    self.symtable.updateItem(instruction.find('arg1').text, 'false', 'bool')
+
         elif opcode == list(self.instructions.keys())[14]:#GT
-            pass
+            if not self.isVariable(instruction.find('arg1')):
+                print("Error - bad operand type", file = sys.stderr)
+                exit(53)
+            else:
+                if not self.symtable.findItem(instruction.find('arg1').text):
+                    print("Error - Unexisted variable", file = sys.stderr)
+                    exit(54)
+            
+            symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
+            symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
+            if symbDataType1 != symbDataType2:
+                print("Error - Not same operands types", file = sys.stderr)
+                exit(53)
+
+            if symbDataType1 != 'int':
+                if int(symbValue1) > int(symbValue2):
+                    self.symtable.updateItem(instruction.find('arg1').text, 'true', 'bool')
+                else:
+                    self.symtable.updateItem(instruction.find('arg1').text, 'false', 'bool')
+            else:
+                if symbValue1 > symbValue2:
+                    self.symtable.updateItem(instruction.find('arg1').text, 'true', 'bool')
+                else:
+                    self.symtable.updateItem(instruction.find('arg1').text, 'false', 'bool')
+
         elif opcode == list(self.instructions.keys())[15]:#EQ
-            pass
+            if not self.isVariable(instruction.find('arg1')):
+                print("Error - bad operand type", file = sys.stderr)
+                exit(53)
+            else:
+                if not self.symtable.findItem(instruction.find('arg1').text):
+                    print("Error - Unexisted variable", file = sys.stderr)
+                    exit(54)
+            
+            symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
+            symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
+            if symbDataType1 != symbDataType2:
+                print("Error - Not same operands types", file = sys.stderr)
+                exit(53)
+
+            if symbDataType1 != 'int':
+                if int(symbValue1) == int(symbValue2):
+                    self.symtable.updateItem(instruction.find('arg1').text, 'true', 'bool')
+                else:
+                    self.symtable.updateItem(instruction.find('arg1').text, 'false', 'bool')
+            else:
+                if symbValue1 == symbValue2:
+                    self.symtable.updateItem(instruction.find('arg1').text, 'true', 'bool')
+                else:
+                    self.symtable.updateItem(instruction.find('arg1').text, 'false', 'bool')
+
         elif opcode == list(self.instructions.keys())[16]:#AND
-            pass
+            if not self.isVariable(instruction.find('arg1')):
+                print("Error - bad operand type", file = sys.stderr)
+                exit(53)
+            else:
+                if not self.symtable.findItem(instruction.find('arg1').text):
+                    print("Error - Unexisted variable", file = sys.stderr)
+                    exit(54)
+            
+            symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
+            symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
+            if symbDataType1 != 'bool'  or symbDataType2 != 'bool':
+                print("Error - Not bool operands types", file = sys.stderr)
+                exit(53)
+
+            if symbValue1 == 'true' and symbValue2 == 'true':
+                self.symtable.updateItem(instruction.find('arg1').text, 'true', 'bool')
+            else:
+                self.symtable.updateItem(instruction.find('arg1').text, 'false', 'bool')
+            
         elif opcode == list(self.instructions.keys())[17]:#OR
-            pass
+            if not self.isVariable(instruction.find('arg1')):
+                print("Error - bad operand type", file = sys.stderr)
+                exit(53)
+            else:
+                if not self.symtable.findItem(instruction.find('arg1').text):
+                    print("Error - Unexisted variable", file = sys.stderr)
+                    exit(54)
+            
+            symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
+            symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
+            if symbDataType1 != 'bool'  or symbDataType2 != 'bool':
+                print("Error - Not bool operands types", file = sys.stderr)
+                exit(53)
+
+            if symbValue1 == 'true' or symbValue2 == 'true':
+                self.symtable.updateItem(instruction.find('arg1').text, 'true', 'bool')
+            else:
+                self.symtable.updateItem(instruction.find('arg1').text, 'false', 'bool')
+            
         elif opcode == list(self.instructions.keys())[18]:#NOT
-            pass
+            if not self.isVariable(instruction.find('arg1')):
+                print("Error - bad operand type", file = sys.stderr)
+                exit(53)
+            else:
+                if not self.symtable.findItem(instruction.find('arg1').text):
+                    print("Error - Unexisted variable", file = sys.stderr)
+                    exit(54)
+            
+            symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
+            if symbDataType1 != 'bool':
+                print("Error - Not bool operands types", file = sys.stderr)
+                exit(53)
+
+            if symbValue1 == 'true':
+                self.symtable.updateItem(instruction.find('arg1').text, 'false', 'bool')
+            else:
+                self.symtable.updateItem(instruction.find('arg1').text, 'true', 'bool')
+            
         elif opcode == list(self.instructions.keys())[19]:#INT2CHAR
-            pass
+            if not self.isVariable(instruction.find('arg1')):
+                print("Error - bad operand type", file = sys.stderr)
+                exit(53)
+            else:
+                if not self.symtable.findItem(instruction.find('arg1').text):
+                    print("Error - Unexisted variable", file = sys.stderr)
+                    exit(54)
+            
+            symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
+            if symbDataType1 != 'int':
+                print("Error - Not bool operands types", file = sys.stderr)
+                exit(53)
+
+            try:
+                character = chr(int(symbValue1))
+            except:
+                print("Error - Invalid number in int2cahr conversion", file = sys.stderr)
+                exit(58)
+
+            self.symtable.updateItem(instruction.find('arg1').text, character, 'string')
+
         elif opcode == list(self.instructions.keys())[20]:#STRI2INT
             pass
         elif opcode == list(self.instructions.keys())[21]:#READ
