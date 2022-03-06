@@ -32,3 +32,13 @@ if 'auto' < 'auta':
 
 integer = 5
 print(str(integer))
+
+if 'false' < 'true':
+    print("PANDO")
+
+stack = [1,2,3,4]
+
+
+
+
+print(0x45)
