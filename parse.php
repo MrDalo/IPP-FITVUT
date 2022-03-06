@@ -117,6 +117,7 @@ function replaceInvalidXML($inputString)
 function argumentPoccessing($xml, $inputArray, $operationCodeLine)
 {
         // Check if inputArray has same lenght as array in operationCode constant
+    print_r($inputArray);
     if(count($inputArray) != count(operationCode[$operationCodeLine]))
     {
         fwrite(STDERR, "ERROR 23 - Other lexicalor syntax ERROR -> non-equal correct parameters number\n");
@@ -314,7 +315,7 @@ while(($line = fgets(STDIN)) != false)
         }
         else{
                 //rozdelenie vstupneho riadku do pola podla bielych znakov, komentare su uz v tomto momente odstranene
-            $inputArray = preg_split('/[\s+]/', $inputArray, -1, PREG_SPLIT_NO_EMPTY);
+            $inputArray = preg_split('/[\s]+/', $inputArray, -1, PREG_SPLIT_NO_EMPTY);
          
             $validOperationReturn = validOperationCode($inputArray[0]);
             $opcode = $validOperationReturn[0];
