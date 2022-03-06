@@ -280,7 +280,7 @@ while(($line = fgets(STDIN)) != false)
 {
     if(!$IDheader)
     {
-        $lineWithoutHastag = preg_replace('/#.*/','', $line);
+        $lineWithoutHastag = preg_replace('/#.*/',' ', $line);
         if(preg_match('/(^\s*.IPPcode22\s*(\s$|#)|^\s*.IPPcode22$)/i', $line))
         {
             $IDheader = true;
@@ -305,7 +305,7 @@ while(($line = fgets(STDIN)) != false)
     else
     {
             //odstranenie komentaru z nacitaneho riadku, komentar nebudem nidky potrebovat
-        $inputArray = preg_replace('/#.*/','', $line);
+        $inputArray = preg_replace('/#.*/',' ', $line);
 
             //Ak sa jedna o prazdny riadok, tak skip
         if(preg_match('/(^\s+$)/i', $inputArray))
