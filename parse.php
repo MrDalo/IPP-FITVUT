@@ -134,7 +134,7 @@ function argumentPoccessing($xml, $inputArray, $operationCodeLine)
     {
         if(operationCode[$operationCodeLine][$i] == 'var')
         {
-            if(preg_match('/^(GF|TF|LF)@[ěščřžýáíéóúůďťňĎŇŤŠČŘŽÝÁÍÉÚŮĚÓa-zA-Z0-9_\-\$&%\*\!\?]+$/', $inputArray[$i]))
+            if(preg_match('/^(GF|TF|LF)@[ěščřžýáíéóúůďťňĎŇŤŠČŘŽÝÁÍÉÚŮĚÓa-zA-Z_\-\$&%\*\!\?][ěščřžýáíéóúůďťňĎŇŤŠČŘŽÝÁÍÉÚŮĚÓa-zA-Z0-9_\-\$&%\*\!\?]*$/', $inputArray[$i]))
             {
                     //replace invalid XML characters to valid escape sequece
                 $inputArray[$i] = replaceInvalidXML($inputArray[$i]);
@@ -152,7 +152,7 @@ function argumentPoccessing($xml, $inputArray, $operationCodeLine)
         }
         else if(operationCode[$operationCodeLine][$i] == 'symb')
         {
-            if(preg_match('/^(GF|TF|LF)@[ěščřžýáíéóúůďťňĎŇŤŠČŘŽÝÁÍÉÚŮĚÓa-zA-Z0-9_\-\$&%\*\!\?]+$/', $inputArray[$i]))
+            if(preg_match('/^(GF|TF|LF)@[ěščřžýáíéóúůďťňĎŇŤŠČŘŽÝÁÍÉÚŮĚÓa-zA-Z_\-\$&%\*\!\?][ěščřžýáíéóúůďťňĎŇŤŠČŘŽÝÁÍÉÚŮĚÓa-zA-Z0-9_\-\$&%\*\!\?]*$/', $inputArray[$i]))
             {
                     //replace invalid XML characters to valid escape sequece
                 $inputArray[$i] = replaceInvalidXML($inputArray[$i]);
@@ -191,7 +191,7 @@ function argumentPoccessing($xml, $inputArray, $operationCodeLine)
         }
         else if(operationCode[$operationCodeLine][$i] == 'label')
         {
-            if(preg_match('/^[ěščřžýáíéóúůďťňĎŇŤŠČŘŽÝÁÍÉÚŮĚÓa-zA-Z0-9_\-\$&%\*\!\?]+$/', $inputArray[$i]))
+            if(preg_match('/^[ěščřžýáíéóúůďťňĎŇŤŠČŘŽÝÁÍÉÚŮĚÓa-zA-Z_\-\$&%\*\!\?][ěščřžýáíéóúůďťňĎŇŤŠČŘŽÝÁÍÉÚŮĚÓa-zA-Z0-9_\-\$&%\*\!\?]*$/', $inputArray[$i]))
             {
                 $xml->startElement("arg$i");
                 $xml->writeAttribute('type', 'label');
