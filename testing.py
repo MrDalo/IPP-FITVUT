@@ -24,3 +24,5 @@ print(a,b,c)
 arr = [[1,"ahoj"], [2, "kamo"]]
 t = arr.pop()
 print(t[0])
+
+print(5//2)
