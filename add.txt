@@ -1,0 +1,3 @@
+.IPPcode22  # nacteni vstupu a vypis
+DEFVAR GF@a
+ADD GF@a int@5 int@10

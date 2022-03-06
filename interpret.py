@@ -315,8 +315,8 @@ class interpreter:
             if symbDataType1 != 'int' or symbDataType2 != 'int':
                 print("Error - bad operand type", file = sys.stderr)
                 exit(53)
-            result = symbValue1 + symbValue2
-            self.symtable.updateItem(self.symtable.findItem(instruction.find('arg1').text), result, 'int')
+            result = int(symbValue1) + int(symbValue2)
+            self.symtable.updateItem(instruction.find('arg1').text, result, 'int')
 
         elif opcode == list(self.instructions.keys())[10]:#SUB
             if not self.isVariable(instruction.find('arg1')):
@@ -332,8 +332,8 @@ class interpreter:
             if symbDataType1 != 'int' or symbDataType2 != 'int':
                 print("Error - bad operand type", file = sys.stderr)
                 exit(53)
-            result = symbValue1 - symbValue2
-            self.symtable.updateItem(self.symtable.findItem(instruction.find('arg1').text), result, 'int')
+            result = int(symbValue1) - int(symbValue2)
+            self.symtable.updateItem(instruction.find('arg1').text, result, 'int')
 
             
         elif opcode == list(self.instructions.keys())[11]:#MUL
@@ -350,8 +350,8 @@ class interpreter:
             if symbDataType1 != 'int' or symbDataType2 != 'int':
                 print("Error - bad operand type", file = sys.stderr)
                 exit(53)
-            result = symbValue1 * symbValue2
-            self.symtable.updateItem(self.symtable.findItem(instruction.find('arg1').text), result, 'int')
+            result = int(symbValue1) * int(symbValue2)
+            self.symtable.updateItem(instruction.find('arg1').text, result, 'int')
 
             
         elif opcode == list(self.instructions.keys())[12]:#IDIV
@@ -372,8 +372,8 @@ class interpreter:
                 print("Error - Dividing by 0", file = sys.stderr)
                 exit(57)
             
-            result = symbValue1 // symbValue2
-            self.symtable.updateItem(self.symtable.findItem(instruction.find('arg1').text), result, 'int')
+            result = int(symbValue1) // int(symbValue2)
+            self.symtable.updateItem(instruction.find('arg1').text, result, 'int')
 
             
         elif opcode == list(self.instructions.keys())[13]:#LT
