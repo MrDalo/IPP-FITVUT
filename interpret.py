@@ -89,11 +89,11 @@ class symtableClass:
         varSplit = item.split("@")
         if not self.findItem(item):
             if varSplit[0] == "GF":
-                self.frames[0].items[varSplit[1]] = [None, None]                
+                self.frames[0].items[varSplit[1]] = ["", None]                
             elif varSplit[0] == "LF":
-                self.frames[self.maxIndex].items[varSplit[1]] = [None, None]                
+                self.frames[self.maxIndex].items[varSplit[1]] = ["", None]                
             else:
-                self.TF.items[varSplit[1]] = [None, None]                
+                self.TF.items[varSplit[1]] = ["", None]                
         
         else:
             print("Error - Redefinition of variable", file = sys.stderr)
@@ -203,15 +203,18 @@ class interpreter:
         return symbIsVar, symbValue, symbDataType
 
     def stringConversion(self, value):
-        value = re.sub('&lt;', '<', value)
-        value = re.sub('&gt;', '>', value)
-        value = re.sub('&amp;', '&', value)
-        value = re.sub('&quot;', '"', value)
-        value = re.sub('&apos;', '\'', value)
+        
+        try:
+            value = re.sub('&lt;', '<', value)
+            value = re.sub('&gt;', '>', value)
+            value = re.sub('&amp;', '&', value)
+            value = re.sub('&quot;', '"', value)
+            value = re.sub('&apos;', '\'', value)
 
-        while re.search('\\\\\d{3}',value):
-            value = re.sub('\\\\\d{3}',chr(int(re.search('\\\\\d{3}',value)[0][1:])),value, count= 1 )
-
+            while re.search('\\\\\d{3}',value):
+                value = re.sub('\\\\\d{3}',chr(int(re.search('\\\\\d{3}',value)[0][1:])),value, count= 1 )
+        except:
+            return value
         return value
 
 
@@ -257,9 +260,10 @@ class interpreter:
                 print("Error - bad operand type", file = sys.stderr)
                 sys.exit(53)
             
-
+            if symb == None:
+                symb = ""
             if symbIsVar:
-                if self.isVarNone(symbValue):
+                if self.isVarNone(symbDataType):
                     print("Error - None in variable, empty variable", file = sys.stderr)
                     sys.exit(56)
                 self.symtable.updateItem(var,symbValue, symbDataType)
@@ -325,8 +329,10 @@ class interpreter:
 
         elif opcode == list(self.instructions.keys())[7]:#PUSHS
             symbIsVar, symbValue, symbDataType = self.isSymb(instruction, 'arg1')
+            if symbValue == None:
+                symbValue = ""
 
-            if self.isVarNone(symbValue):
+            if self.isVarNone(symbDataType):
                 print("Error - None in variable, empty variable", file = sys.stderr)
                 sys.exit(56)
             
@@ -359,9 +365,13 @@ class interpreter:
                     sys.exit(54)
             
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
+            if symbValue1 == None:
+                symbValue1 = ""
             symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
+            if symbValue2 == None:
+                symbValue2 = ""
 
-            if self.isVarNone(symbValue1) or self.isVarNone(symbValue2):
+            if self.isVarNone(symbDataType1) or self.isVarNone(symbDataType2):
                 print("Error - None in variable, empty variable", file = sys.stderr)
                 sys.exit(56)
 
@@ -383,9 +393,13 @@ class interpreter:
                     sys.exit(54)
             
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
+            if symbValue1 == None:
+                symbValue1 = ""
             symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
+            if symbValue2 == None:
+                symbValue2 = ""
 
-            if self.isVarNone(symbValue1) or self.isVarNone(symbValue2):
+            if self.isVarNone(symbDataType1) or self.isVarNone(symbDataType2):
                 print("Error - None in variable, empty variable", file = sys.stderr)
                 sys.exit(56)
 
@@ -408,9 +422,13 @@ class interpreter:
                     sys.exit(54)
             
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
+            if symbValue1 == None:
+                symbValue1 = ""
             symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
+            if symbValue2 == None:
+                symbValue2 = ""
 
-            if self.isVarNone(symbValue1) or self.isVarNone(symbValue2):
+            if self.isVarNone(symbDataType1) or self.isVarNone(symbDataType2):
                 print("Error - None in variable, empty variable", file = sys.stderr)
                 sys.exit(56)
 
@@ -433,9 +451,13 @@ class interpreter:
                     sys.exit(54)
             
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
+            if symbValue1 == None:
+                symbValue1 = ""
             symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
+            if symbValue2 == None:
+                symbValue2 = ""
 
-            if self.isVarNone(symbValue1) or self.isVarNone(symbValue2):
+            if self.isVarNone(symbDataType1) or self.isVarNone(symbDataType2):
                 print("Error - None in variable, empty variable", file = sys.stderr)
                 sys.exit(56)
 
@@ -462,14 +484,18 @@ class interpreter:
                     sys.exit(54)
             
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
+            if symbValue1 == None:
+                symbValue1 = ""
             symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
+            if symbValue2 == None:
+                symbValue2 = ""
 
-            if self.isVarNone(symbValue1) or self.isVarNone(symbValue2):
+            if self.isVarNone(symbDataType1) or self.isVarNone(symbDataType2):
                 print("Error - None in variable, empty variable", file = sys.stderr)
                 sys.exit(56)
 
             if symbDataType1 != symbDataType2:
-                print("Error - Not same operands types", file = sys.stderr)
+                print("Error - 1Not same operands types", file = sys.stderr)
                 sys.exit(53)
 
             if symbDataType1 == 'string' and symbDataType2 == 'string':
@@ -499,14 +525,18 @@ class interpreter:
                     sys.exit(54)
             
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
+            if symbValue1 == None:
+                symbValue1 = ""
             symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
+            if symbValue2 == None:
+                symbValue2 = ""
 
-            if self.isVarNone(symbValue1) or self.isVarNone(symbValue2):
+            if self.isVarNone(symbDataType1) or self.isVarNone(symbDataType2):
                 print("Error - None in variable, empty variable", file = sys.stderr)
                 sys.exit(56)
 
             if symbDataType1 != symbDataType2:
-                print("Error - Not same operands types", file = sys.stderr)
+                print("Error - 2Not same operands types", file = sys.stderr)
                 sys.exit(53)
 
             if symbDataType1 == 'string' and symbDataType2 == 'string':
@@ -536,14 +566,18 @@ class interpreter:
                     sys.exit(54)
             
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
+            if symbValue1 == None:
+                symbValue1 = ""
             symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
+            if symbValue2 == None:
+                symbValue2 = ""
 
-            if self.isVarNone(symbValue1) or self.isVarNone(symbValue2):
+            if self.isVarNone(symbDataType1) or self.isVarNone(symbDataType2):
                 print("Error - None in variable, empty variable", file = sys.stderr)
                 sys.exit(56)
 
             if symbDataType1 != symbDataType2:
-                print("Error - Not same operands types", file = sys.stderr)
+                print("Error - 3Not same operands types", file = sys.stderr)
                 sys.exit(53)
 
             if symbDataType1 == 'string' and symbDataType2 == 'string':
@@ -573,9 +607,13 @@ class interpreter:
                     sys.exit(54)
             
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
+            if symbValue1 == None:
+                symbValue1 = ""
             symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
+            if symbValue2 == None:
+                symbValue2 = ""
 
-            if self.isVarNone(symbValue1) or self.isVarNone(symbValue2):
+            if self.isVarNone(symbDataType1) or self.isVarNone(symbDataType2):
                 print("Error - None in variable, empty variable", file = sys.stderr)
                 sys.exit(56)
 
@@ -600,9 +638,13 @@ class interpreter:
                     sys.exit(54)
             
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
+            if symbValue1 == None:
+                symbValue1 = ""
             symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
+            if symbValue2 == None:
+                symbValue2 = ""
 
-            if self.isVarNone(symbValue1) or self.isVarNone(symbValue2):
+            if self.isVarNone(symbDataType1) or self.isVarNone(symbDataType2):
                 print("Error - None in variable, empty variable", file = sys.stderr)
                 sys.exit(56)
 
@@ -627,8 +669,10 @@ class interpreter:
                     sys.exit(54)
             
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
+            if symbValue1 == None:
+                symbValue1 = ""
 
-            if self.isVarNone(symbValue1):
+            if self.isVarNone(symbDataType1):
                 print("Error - None in variable, empty variable", file = sys.stderr)
                 sys.exit(56)
 
@@ -653,8 +697,10 @@ class interpreter:
                     sys.exit(54)
             
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
+            if symbValue1 == None:
+                symbValue1 = ""
 
-            if self.isVarNone(symbValue1):
+            if self.isVarNone(symbDataType1):
                 print("Error - None in variable, empty variable", file = sys.stderr)
                 sys.exit(56)
 
@@ -680,14 +726,18 @@ class interpreter:
                     sys.exit(54)
             
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
+            if symbValue1 == None:
+                symbValue1 = ""
             symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
+            if symbValue2 == None:
+                symbValue2 = ""
 
-            if self.isVarNone(symbValue1) or self.isVarNone(symbValue2):
+            if self.isVarNone(symbDataType1) or self.isVarNone(symbDataType2):
                 print("Error - None in variable, empty variable", file = sys.stderr)
                 sys.exit(56)
 
             if symbDataType1 != 'string' or symbDataType2 != 'int':
-                print("Error - Not same operands types", file = sys.stderr)
+                print("Error - 4Not same operands types", file = sys.stderr)
                 sys.exit(53)
             
             symbValue2 = int(symbValue2)
@@ -707,11 +757,13 @@ class interpreter:
 
         elif opcode == list(self.instructions.keys())[22]:#WRITE
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg1')
+            if symbValue1 == None:
+                symbValue1 = ""
             if symbDataType1 == 'string':
                 symbValue1 = self.stringConversion(symbValue1)
 
             if symbDataType1 != "nil":
-                print( symbValue1,end='')
+                print(symbValue1,end='')
 
 
 
@@ -725,12 +777,16 @@ class interpreter:
                     sys.exit(54)
             
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
+            if symbValue1 == None:
+                symbValue1 = ""
             symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
+            if symbValue2 == None:
+                symbValue2 = ""
 
             if symbDataType1 != 'string'  or symbDataType2 != 'string':
                 print("Error - Not string operands types", file = sys.stderr)
                 sys.exit(53)
-
+            
             self.symtable.updateItem(instruction.find('arg1').text, symbValue1+symbValue2, 'string')
 
 
@@ -744,6 +800,8 @@ class interpreter:
                     sys.exit(54)
             
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
+            if symbValue1 == None:
+                symbValue1 = ""
             symbValue1 = self.stringConversion(symbValue1)
             
             if symbDataType1 != 'string':
@@ -762,7 +820,11 @@ class interpreter:
                     sys.exit(54)
             
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
+            if symbValue1 == None:
+                symbValue1 = ""
             symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
+            if symbValue2 == None:
+                symbValue2 = ""
 
             if symbDataType1 != 'string'  or symbDataType2 != 'int':
                 print("Error - Not string or integer operands types", file = sys.stderr)
@@ -792,14 +854,18 @@ class interpreter:
                     if not newVariable[1] == "string":
                         print("Error - bad operand type", file = sys.stderr)
                         sys.exit(53)
-                    if self.isVarNone(newVariable[0]):
+                    if self.isVarNone(newVariable[1]):
                         print("Error - None in variable", file = sys.stderr)
                         sys.exit(56)
                     newVariable = newVariable[0]
 
             
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
+            if symbValue1 == None:
+                symbValue1 = ""
             symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
+            if symbValue2 == None:
+                symbValue2 = ""
 
             if symbDataType1 != 'int'  or symbDataType2 != 'string':
                 print("Error - Not string or integer operands types", file = sys.stderr)
@@ -828,6 +894,8 @@ class interpreter:
                     sys.exit(54)
             
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
+            if symbValue1 == None:
+                symbValue1 = ""
             if symbDataType1 == None:
                 self.symtable.updateItem(instruction.find('arg1').text, '', 'string')
             else:    
@@ -839,9 +907,11 @@ class interpreter:
 
 
         elif opcode == list(self.instructions.keys())[29]:#JUMP
+            
             if self.isLabel(instruction.find('arg1')):
                 try:
                     i = int(self.arrayOfLabels[instruction.find('arg1').text])
+                    
                 except:
                     print("Error - Undefined LABEL call", file = sys.stderr)
                     sys.exit(52)
@@ -857,10 +927,14 @@ class interpreter:
                 sys.exit(53)
 
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
+            if symbValue1 == None:
+                symbValue1 = ""
             symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
-
-            if symbDataType1 != symbDataType2 or symbDataType1 != 'nil' or symbDataType2 != 'nil':
-                print("Error - Not same type or nil operands type", file = sys.stderr)
+            if symbValue2 == None:
+                symbValue2 = ""
+            
+            if symbDataType1 != symbDataType2 and symbDataType1 != 'nil' and symbDataType2 != 'nil':
+                print("Error - 5Not same type or nil operands type", file = sys.stderr)
                 sys.exit(53)
 
             if symbValue1 == symbValue2:
@@ -877,10 +951,14 @@ class interpreter:
                 sys.exit(53)
 
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
+            if symbValue1 == None:
+                symbValue1 = ""
             symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
+            if symbValue2 == None:
+                symbValue2 = ""
 
-            if symbDataType1 != symbDataType2 or symbDataType1 != 'nil' or symbDataType2 != 'nil':
-                print("Error - Not same type or nil operands type", file = sys.stderr)
+            if symbDataType1 != symbDataType2 and symbDataType1 != 'nil' and symbDataType2 != 'nil':
+                print("Error - 6Not same type or nil operands type", file = sys.stderr)
                 sys.exit(53)
 
             if symbValue1 != symbValue2:
@@ -892,6 +970,8 @@ class interpreter:
         
         elif opcode == list(self.instructions.keys())[32]:#EXIT
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg1')
+            if symbValue1 == None:
+                symbValue1 = ""
             symbValue1 = int(symbValue1)
             if symbValue1 < 0 or symbValue1 > 49:
                 print("Error - Bad EXIT value", file = sys.stderr)
@@ -902,14 +982,15 @@ class interpreter:
 
         elif opcode == list(self.instructions.keys())[33]:#DPRINT
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg1')
+            if symbValue1 == None:
+                symbValue1 = ""
             print(symbValue1, file = sys.stderr)
             
             
         elif opcode == list(self.instructions.keys())[34]:#BREAK
             print(f'Position in code: {i}, content of frame: {self.stack}, number of executed instructions: {self.numberOfInstructions}', file = sys.stderr)
 
-
-        return i+1
+        return i
 
 
 class xmlReader:
@@ -1042,9 +1123,11 @@ def programmeRunner(sourceFile):
     
 
     interpret = interpreter(arrayOfLabels)
-    for i in range(len(listOfInstructions)):
-        i = interpret.instructionOpeartions(listOfInstructions[i].attrib.get('opcode').upper(),listOfInstructions[i], i)
-    
+    iteration = 0
+    while iteration < len(listOfInstructions):
+
+        iteration = interpret.instructionOpeartions(listOfInstructions[iteration].attrib.get('opcode').upper(),listOfInstructions[iteration], iteration)
+        iteration += 1
 
 
 
