@@ -257,11 +257,11 @@ class interpreter:
                 print("Error - bad operand type", file = sys.stderr)
                 sys.exit(53)
             
-            if self.isVarNone(symbValue):
-                print("Error - None in variable, empty variable", file = sys.stderr)
-                sys.exit(56)
 
             if symbIsVar:
+                if self.isVarNone(symbValue):
+                    print("Error - None in variable, empty variable", file = sys.stderr)
+                    sys.exit(56)
                 self.symtable.updateItem(var,symbValue, symbDataType)
             else:
                 self.symtable.updateItem(var,symb, symbDataType)
@@ -1050,7 +1050,6 @@ def programmeRunner(sourceFile):
 
 if __name__ == '__main__':
     sourceFile, inputFile = arguments()
-    print(sourceFile, inputFile)
     programmeRunner(sourceFile)
 
 
