@@ -1,3 +1,5 @@
+import re
+
 direc ={
     'ahoj': 1,
     'ako':2
@@ -42,3 +44,25 @@ stack = [1,2,3,4]
 
 
 print(0x45)
+
+
+string = 'a032hoj&lt;ako&lt;&quot;sam&apos;as'
+string = re.sub('&lt;', '<', string)
+string = re.sub('&gt;', '>', string)
+string = re.sub('&amp;', '&', string)
+string = re.sub('&quot;', '"', string)
+string = re.sub('&apos;', '\'', string)
+if re.search('\\\\', string):
+    print("HERE")
+
+
+f = open("test.txt", "r")
+string2 = f.read()
+
+
+while re.search('\\\\\d{3}',string2):
+    string2 = re.sub('\\\\\d{3}',chr(int(re.search('\\\\\d{3}',string2)[0][1:])),string2, count= 1 )
+
+print(string2) 
+#print(string2[0]) 
+
