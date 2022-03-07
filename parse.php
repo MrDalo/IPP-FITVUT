@@ -31,11 +31,11 @@ const operationCode = [
         ['MUL', 'var', 'symb', 'symb'],
         ['IDIV', 'var', 'symb', 'symb'],
         ['LT', 'var', 'symb', 'symb'],
-        ['QT', 'var', 'symb', 'symb'],
+        ['GT', 'var', 'symb', 'symb'],
         ['EQ', 'var', 'symb', 'symb'],
         ['AND', 'var', 'symb', 'symb'],
         ['OR', 'var', 'symb', 'symb'],
-        ['NOT', 'var', 'symb', 'symb'],
+        ['NOT', 'var', 'symb'],
         ['INT2CHAR', 'var', 'symb'],
         ['STRI2INT', 'var', 'symb', 'symb'],
         ['READ', 'var', 'type'],
@@ -117,7 +117,6 @@ function replaceInvalidXML($inputString)
 function argumentPoccessing($xml, $inputArray, $operationCodeLine)
 {
         // Check if inputArray has same lenght as array in operationCode constant
-    print_r($inputArray);
     if(count($inputArray) != count(operationCode[$operationCodeLine]))
     {
         fwrite(STDERR, "ERROR 23 - Other lexicalor syntax ERROR -> non-equal correct parameters number\n");

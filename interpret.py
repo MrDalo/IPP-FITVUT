@@ -707,7 +707,8 @@ class interpreter:
 
         elif opcode == list(self.instructions.keys())[22]:#WRITE
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg1')
-            symbValue1 = self.stringConversion(symbValue1)
+            if symbDataType1 == 'string':
+                symbValue1 = self.stringConversion(symbValue1)
 
             if symbDataType1 != "nil":
                 print( symbValue1,end='')
