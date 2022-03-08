@@ -109,7 +109,12 @@ class interpreter:
         self.stack = []
         self.numberOfInstructions = 0
         self.inputFile = inputFile
-
+        if self.inputFile != None:
+            try:
+                self.inputFile = open(self.inputFile, "r")
+            except:
+                print("Error - invalid file name or unable to open inputfile for reading", file = sys.stderr)
+                sys.exit(11)
 
     instructions ={
         "MOVE": ["var", "symb"],#0
@@ -767,7 +772,7 @@ class interpreter:
                     sys.exit(54)
 
             typeValue =  instruction.find('arg2').text
-            if not self.isType(typeValue):
+            if not self.isType(instruction.find('arg2')):
                 print("Error - bad operand type", file = sys.stderr)
                 sys.exit(53)
 
@@ -775,7 +780,7 @@ class interpreter:
             if self.inputFile == None:
                 value = input()
             else:
-                pass
+                value = self.inputFile.readline()
 
             if typeValue == "int":
                 try:
