@@ -311,7 +311,7 @@ class interpreter:
 
 
         elif opcode == list(self.instructions.keys())[5]:#CALL
-            self.stack.append([i, 'label'])
+            self.stack.append([i, 'int'])
             if self.isLabel(instruction.find('arg1')):
                 try:
                     i = int(self.arrayOfLabels[instruction.find('arg1').text])
