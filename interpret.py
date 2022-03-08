@@ -103,11 +103,12 @@ class symtableClass:
 
 class interpreter:
     
-    def __init__(self, arrayOfLabels):
+    def __init__(self, arrayOfLabels, inputFile):
         self.symtable = symtableClass()
         self.arrayOfLabels = arrayOfLabels
         self.stack = []
         self.numberOfInstructions = 0
+        self.inputFile = inputFile
 
 
     instructions ={
@@ -153,6 +154,12 @@ class interpreter:
             return True
         else:
             return False   
+    
+    def isType(self, arg):
+        if arg.attrib.get('type') == "type":
+            return True
+        else:
+            return False  
 
     def isLabel(self, arg):
         if arg.attrib.get('type') == "label":
@@ -751,7 +758,44 @@ class interpreter:
 
 
         elif opcode == list(self.instructions.keys())[21]:#READ
-            pass
+            if not self.isVariable(instruction.find('arg1')):
+                print("Error - bad operand type", file = sys.stderr)
+                sys.exit(53)
+            else:
+                if not self.symtable.findItem(instruction.find('arg1').text):
+                    print("Error - Unexisted variable", file = sys.stderr)
+                    sys.exit(54)
+
+            typeValue =  instruction.find('arg2').text
+            if not self.isType(typeValue):
+                print("Error - bad operand type", file = sys.stderr)
+                sys.exit(53)
+
+            
+            if self.inputFile == None:
+                value = input()
+            else:
+                pass
+
+            if typeValue == "int":
+                try:
+                    value = int(value)
+                except:
+                    value = 'nil'
+                    typeValue = 'nil'
+            elif typeValue == 'bool':
+                if value.lower() == 'true':
+                    value = 'true'
+                else:
+                    value = 'false'
+            elif typeValue == 'string' and value != None:
+                value = self.stringConversion(value)
+            
+            if value == None:
+                value = ""
+                typeValue = "nil"
+
+            self.symtable.updateItem(instruction.find('arg1').text, value, typeValue)
 
 
 
@@ -1006,14 +1050,28 @@ class xmlReader:
                 print("Error - invalid file name or unable to open file for reading", file = sys.stderr)
                 sys.exit(11)
 
-            self.root = tree.getroot()
+            try:
+                self.root = tree.getroot()
+            except:
+                print("Error - invalid format of xml", file = sys.stderr)
+                sys.exit(31)
+
         else:
             tree = input()
-            self.root = ET.fromstring(tree)
+            try:
+                self.root = ET.fromstring(tree)
+            except:
+                print("Error - invalid format of xml", file = sys.stderr)
+                sys.exit(31)
+
 
 
 
     def orderChecker(self, externalOrder):
+        if externalOrder == None:
+            print("Error - missing instruction order", file = sys.stderr)
+            sys.exit(32)
+
         if int(self.instructionOrder) < int(externalOrder):
             self.instructionOrder = externalOrder
             return True
@@ -1086,7 +1144,7 @@ def sortingCriteria(instruction):
 
 
 
-def programmeRunner(sourceFile):
+def programmeRunner(sourceFile, inputFile):
     reader = xmlReader(sourceFile)
     listOfInstructions=[]
 
@@ -1117,12 +1175,11 @@ def programmeRunner(sourceFile):
             except:
                 arrayOfLabels[instruction.find('arg1').text] = counterIndex 
 
-
-    #print(arrayOfLabels)        
+      
     # TODO ak budem kontrolovat existenciu LABELu, pouzi pole arrayOfLabels cez try-except a hlada kluc
     
 
-    interpret = interpreter(arrayOfLabels)
+    interpret = interpreter(arrayOfLabels, inputFile)
     iteration = 0
     while iteration < len(listOfInstructions):
 
@@ -1133,7 +1190,7 @@ def programmeRunner(sourceFile):
 
 if __name__ == '__main__':
     sourceFile, inputFile = arguments()
-    programmeRunner(sourceFile)
+    programmeRunner(sourceFile, inputFile)
 
 
 
