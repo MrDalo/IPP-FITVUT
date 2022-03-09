@@ -329,8 +329,12 @@ class interpreter:
                 if poppedValue[1] != 'int':
                     print("Error - NOT int value in poppedValue", file = sys.stderr)
                     sys.exit(57)
+                try:
+                    i = int(poppedValue[0])
+                except:
+                    print("Error - Bad XML structure INT conversion", file = sys.stderr)
+                    sys.exit(32)
 
-                i = int(poppedValue[0])
                 #Check bolo tu: i = poppedValue[0]
             else:
                 print("Error - Empty stack", file = sys.stderr)
@@ -390,7 +394,13 @@ class interpreter:
             if symbDataType1 != 'int' or symbDataType2 != 'int':
                 print("Error - bad operand type", file = sys.stderr)
                 sys.exit(53)
-            result = int(symbValue1) + int(symbValue2)
+            
+            try:
+                result = int(symbValue1) + int(symbValue2)
+            except:
+                print("Error - Bad XML structure INT conversion", file = sys.stderr)
+                sys.exit(32)
+            
             self.symtable.updateItem(instruction.find('arg1').text, result, 'int')
 
 
@@ -418,7 +428,12 @@ class interpreter:
             if symbDataType1 != 'int' or symbDataType2 != 'int':
                 print("Error - bad operand type", file = sys.stderr)
                 sys.exit(53)
-            result = int(symbValue1) - int(symbValue2)
+
+            try:
+                result = int(symbValue1) - int(symbValue2)
+            except:
+                print("Error - Bad XML structure INT conversion", file = sys.stderr)
+                sys.exit(32)
             self.symtable.updateItem(instruction.find('arg1').text, result, 'int')
 
 
@@ -447,7 +462,13 @@ class interpreter:
             if symbDataType1 != 'int' or symbDataType2 != 'int':
                 print("Error - bad operand type", file = sys.stderr)
                 sys.exit(53)
-            result = int(symbValue1) * int(symbValue2)
+
+            try:
+                result = int(symbValue1) * int(symbValue2)
+            except:
+                print("Error - Bad XML structure INT conversion", file = sys.stderr)
+                sys.exit(32)
+            
             self.symtable.updateItem(instruction.find('arg1').text, result, 'int')
 
 
@@ -480,7 +501,12 @@ class interpreter:
                 print("Error - Dividing by 0", file = sys.stderr)
                 sys.exit(57)
             
-            result = int(symbValue1) // int(symbValue2)
+
+            try:
+                result = int(symbValue1) // int(symbValue2)
+            except:
+                print("Error - Bad XML structure INT conversion", file = sys.stderr)
+                sys.exit(32)
             self.symtable.updateItem(instruction.find('arg1').text, result, 'int')
 
 
@@ -752,7 +778,12 @@ class interpreter:
                 print("Error - 4Not same operands types", file = sys.stderr)
                 sys.exit(53)
             
-            symbValue2 = int(symbValue2)
+            try:
+                symbValue2 = int(symbValue2)
+            except:
+                print("Error - Bad XML structure INT conversion", file = sys.stderr)
+                sys.exit(32)
+            
             symbValue1 = self.stringConversion(symbValue1)
             
             if symbValue2 > len(symbValue1) - 1 or symbValue2 < 0:
@@ -879,7 +910,11 @@ class interpreter:
                 print("Error - Not string or integer operands types", file = sys.stderr)
                 sys.exit(53)
 
-            symbValue2 = int(symbValue2)
+            try:
+                symbValue2 = int(symbValue2)
+            except:
+                print("Error - Bad XML structure INT conversion", file = sys.stderr)
+                sys.exit(32)
             symbValue1 = self.stringConversion(symbValue1)
 
             if symbValue2 > len(symbValue1) - 1 or symbValue2 < 0:
@@ -920,7 +955,11 @@ class interpreter:
                 print("Error - Not string or integer operands types", file = sys.stderr)
                 sys.exit(53)
 
-            symbValue1 = int(symbValue1)
+            try:
+                symbValue1 = int(symbValue1)
+            except:
+                print("Error - Bad XML structure INT conversion", file = sys.stderr)
+                sys.exit(32)
             symbValue2 = self.stringConversion(symbValue2)
             newVariable = self.stringConversion(newVariable)
 
@@ -1021,7 +1060,12 @@ class interpreter:
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg1')
             if symbValue1 == None:
                 symbValue1 = ""
-            symbValue1 = int(symbValue1)
+
+            try:    
+                symbValue1 = int(symbValue1)
+            except:
+                print("Error - Bad XML structure INT conversion", file = sys.stderr)
+                sys.exit(32)
             if symbValue1 < 0 or symbValue1 > 49:
                 print("Error - Bad EXIT value", file = sys.stderr)
                 sys.exit(57)
