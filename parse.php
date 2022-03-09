@@ -4,7 +4,7 @@
  * @author Dalibor Kralik, xkrali20
  * @brief Module which process program arguments
  * 
- * @file programArguments.php
+ * @file parse.php
  */
 
 ini_set('display_errors', 'stderr');
