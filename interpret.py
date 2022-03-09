@@ -780,7 +780,7 @@ class interpreter:
             if self.inputFile == None:
                 value = input()
             else:
-                value = self.inputFile.readline()
+                value = self.inputFile.readline().replace('\n', "")
 
             if typeValue == "int":
                 try:
