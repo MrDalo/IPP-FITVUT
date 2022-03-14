@@ -8,7 +8,186 @@
  */
 ini_set('display_errors', 'stderr');
 
+$html = "<!DOCTYPE html>
+<html lang=\"en\">
+<head>
+    <meta charset=\"UTF-8\">
+    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+    <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
+    <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
+    <link href=\"https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500&display=swap\" rel=\"stylesheet\">
+    <title>IPP project 2022</title>
 
+    <style>
+        *{
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-size: 16px;
+            color: black;
+            font-family:\'Fredoka\',Arial, sans-serif;
+        }
+
+        #header{
+            margin:3% 20%;
+            width: 60%;
+            height: 20vh;
+            background-color: #eed8a9af;
+            text-align: center;
+            position: relative;
+            border-radius: 30px;
+            padding-top: 0.5vh;
+            box-shadow: 5px 5px 10px #AAAAAA;
+        }
+
+        #header h1{
+            font-size: 2.5em;
+            margin-bottom: 2%;
+            margin-top: 2%;
+        }
+
+        #header p{
+            font-size: 1.4em;
+        }
+
+        #header div{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: row;
+            column-gap: 5%;
+            
+        }
+        
+        #author{
+            width: 100%;
+            font-size: 1.2em;
+        }
+
+        #testBox{
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            align-items: center;
+            margin: 5% 10% 12% 10%;
+            width: 80%;
+            column-gap: 10%;
+            height: 80vh;
+        
+        }
+
+
+        #testBox h1{
+            font-size: 2em;
+            width: 100%;
+            text-align: center;
+            margin-bottom: 5vh;
+            font-weight: 500;
+        }
+
+        #testBpx h2{
+            font-size: 1.5em;
+            width: 100%;
+            text-align: center;
+            margin-bottom: 5%;
+            font-weight: 500;
+        }
+
+        .Meter{
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 5vh;
+        }
+
+        .Meter meter{
+            width: 20%;
+        }
+
+        
+
+        .correct{
+            width: 45%;
+            position: relative;
+            background-color: rgb(191, 255, 194);
+            border-radius: 30px;
+            height: 100%;
+            overflow: auto;
+            padding-top: 3vh;
+            padding-bottom: 1vh;
+        }
+        
+        .incorrect{
+            width: 45%;
+            position: relative;
+            background-color: rgb(255, 180, 180);
+            border-radius: 30px;
+            height: 100%;
+            overflow: auto;
+            padding-top: 3vh;
+            padding-bottom: 1vh;
+        }
+
+        .correct div, .incorrect div{
+            width: 80%;
+            margin-left: 10%;
+            margin-right:10%;
+            height: 4vh;
+            border-bottom: #555555 1px solid;
+            line-height: 4vh;
+        }
+
+        ::-webkit-scrollbar {
+        width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #eee;
+            border-radius: 10px;  
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #aaa; 
+            border-radius: 10px; 
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+        background: #777; 
+        }
+
+
+    </style>
+</head>
+<body>
+    <div id=\"header\">
+        <h1>IPP project 2022</h1>
+        <div>
+            <p>Correct answers: $correctTests/$srcCounter</p>
+            <meter id=\"correctAnswers\" value=\"$correctTests\" min=\"0\" max=\"$srcCounter\"> 
+        </div>
+        <div id=\"author\">
+            Author: Dalibor Králik - xkrali20
+        </div>
+    </div>
+    <div id=\"testBox\">
+        <h1>$testingPart tests $correctTests/$srcCounter</h1>
+        <div class=\"Meter\">
+            <meter value=\"$correctTests\" min=\"0\" max=\"$srcCounter\"></meter>
+        </div>
+        <div class=\"correct\">
+            <h2>Correct</h2>
+            $correctTestsString
+            
+        </div>
+        <div class=\"incorrect\">
+            <h2>Incorrect</h2>
+            $failedTestsString
+        </div>
+    </div>
+    
+</body>
+</html>";
 
 
 function processArgument()
@@ -196,7 +375,6 @@ function runTimeOfProgram()
 
     foreach ($arrayOfFiles as $file)
     {
-        $file = str_replace($directory, "", $file);
         
         // testovanie pre parser
         if (preg_match("/.+\.src$/", $file))
@@ -239,6 +417,7 @@ function runTimeOfProgram()
                 if ($exitCode == $programRefferenceErrorCode && $parseOnly != 1 && $exitCode > 0)
                 {
                     $correctTests +=1;
+                    $file = str_replace($directory, "", $file);
                     $correctTestsString = $correctTestsString."<div>".$file."</div>";
                     continue;
                 }
@@ -255,12 +434,14 @@ function runTimeOfProgram()
                         {
                                 //Zapis do HTML do CORRECT ze sedi exit code aj je zhodna JAVA
                             $correctTests +=1;
+                            $file = str_replace($directory, "", $file);
                             $correctTestsString = $correctTestsString."<div>".$file."</div>";
                             // echo "Correct Java tester Output\n";
                         }
                         else
                         {
                                 //Zapis do HTML do INCORRECT ze nie je identicka JAVA
+                                $file = str_replace($directory, "", $file);
                             $failedTestsString = $failedTestsString."<div>".$file."</div>";
                             // echo "Java tester unmatched";
                         }
@@ -269,6 +450,7 @@ function runTimeOfProgram()
                     {
                         //Zapis do HTML ze mam zhodny exitcode > 0, do CORRECT
                         $correctTests +=1;
+                        $file = str_replace($directory, "", $file);
                         $correctTestsString = $correctTestsString."<div>".$file."</div>";
                     }
 
@@ -277,6 +459,7 @@ function runTimeOfProgram()
                 else
                 {
                         //Zapis chyby do HTML do INCORRECT
+                    $file = str_replace($directory, "", $file);
                     $failedTestsString = $failedTestsString."<div>".$file."</div>";
                     // echo "Exit Code unmatched: $file";
                     continue;
@@ -303,11 +486,13 @@ function runTimeOfProgram()
                     {
                         //Zapis do CORRECT
                         $correctTests +=1;
+                        $file = str_replace($directory, "", $file);
                         $correctTestsString = $correctTestsString."<div>".$file."</div>";
                     }
                     else
                     {
                         //Zapis do INCORRECT
+                        $file = str_replace($directory, "", $file);
                         $failedTestsString = $failedTestsString."<div>".$file."</div>";
                     }
             
@@ -315,6 +500,7 @@ function runTimeOfProgram()
                 else
                 {
                     //Zapis do INCORRECT nezhodny exit code
+                    $file = str_replace($directory, "", $file);
                     $failedTestsString = $failedTestsString."<div>".$file."</div>";
                 }
             }
@@ -334,186 +520,6 @@ function runTimeOfProgram()
 }
 
 
-$html = "<!DOCTYPE html>
-<html lang=\"en\">
-<head>
-    <meta charset=\"UTF-8\">
-    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
-    <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
-    <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
-    <link href=\"https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500&display=swap\" rel=\"stylesheet\">
-    <title>IPP project 2022</title>
-
-    <style>
-        *{
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-size: 16px;
-            color: black;
-            font-family:\'Fredoka\',Arial, sans-serif;
-        }
-
-        #header{
-            margin:3% 20%;
-            width: 60%;
-            height: 20vh;
-            background-color: #eed8a9af;
-            text-align: center;
-            position: relative;
-            border-radius: 30px;
-            padding-top: 0.5vh;
-            box-shadow: 5px 5px 10px #AAAAAA;
-        }
-
-        #header h1{
-            font-size: 2.5em;
-            margin-bottom: 2%;
-            margin-top: 2%;
-        }
-
-        #header p{
-            font-size: 1.4em;
-        }
-
-        #header div{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: row;
-            column-gap: 5%;
-            
-        }
-        
-        #author{
-            width: 100%;
-            font-size: 1.2em;
-        }
-
-        #testBox{
-            position: relative;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            align-items: center;
-            margin: 5% 10% 12% 10%;
-            width: 80%;
-            column-gap: 10%;
-            height: 80vh;
-        
-        }
-
-
-        #testBox h1{
-            font-size: 2em;
-            width: 100%;
-            text-align: center;
-            margin-bottom: 5vh;
-            font-weight: 500;
-        }
-
-        #testBpx h2{
-            font-size: 1.5em;
-            width: 100%;
-            text-align: center;
-            margin-bottom: 5%;
-            font-weight: 500;
-        }
-
-        .Meter{
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            margin-bottom: 5vh;
-        }
-
-        .Meter meter{
-            width: 20%;
-        }
-
-        
-
-        .correct{
-            width: 45%;
-            position: relative;
-            background-color: rgb(191, 255, 194);
-            border-radius: 30px;
-            height: 100%;
-            overflow: auto;
-            padding-top: 3vh;
-            padding-bottom: 1vh;
-        }
-        
-        .incorrect{
-            width: 45%;
-            position: relative;
-            background-color: rgb(255, 180, 180);
-            border-radius: 30px;
-            height: 100%;
-            overflow: auto;
-            padding-top: 3vh;
-            padding-bottom: 1vh;
-        }
-
-        .correct div, .incorrect div{
-            width: 80%;
-            margin-left: 10%;
-            margin-right:10%;
-            height: 4vh;
-            border-bottom: #555555 1px solid;
-            line-height: 4vh;
-        }
-
-        ::-webkit-scrollbar {
-        width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #eee;
-            border-radius: 10px;  
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #aaa; 
-            border-radius: 10px; 
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-        background: #777; 
-        }
-
-
-    </style>
-</head>
-<body>
-    <div id=\"header\">
-        <h1>IPP project 2022</h1>
-        <div>
-            <p>Correct answers: $correctTests/$srcCounter</p>
-            <meter id=\"correctAnswers\" value=\"$correctTests\" min=\"0\" max=\"$srcCounter\"> 
-        </div>
-        <div id=\"author\">
-            Author: Dalibor Králik - xkrali20
-        </div>
-    </div>
-    <div id=\"testBox\">
-        <h1>$testingPart tests $correctTests/$srcCounter</h1>
-        <div class=\"Meter\">
-            <meter value=\"$correctTests\" min=\"0\" max=\"$srcCounter\"></meter>
-        </div>
-        <div class=\"correct\">
-            <h2>Correct</h2>
-            $correctTestsString
-            
-        </div>
-        <div class=\"incorrect\">
-            <h2>Incorrect</h2>
-            $failedTestsString
-        </div>
-    </div>
-    
-</body>
-</html>";
 
 
 
