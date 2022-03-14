@@ -195,11 +195,11 @@ function runTimeOfProgram()
 
     foreach ($arrayOfFiles as $file)
     {
-        
-        // testovanie pre parser
+    	  $file = $directory.$file;
+	 	  // testovanie pre parser
         if (preg_match("/.+\.src$/", $file))
         {
-            
+           // echo "$file\n"; 
             $srcCounter += 1;
             
                 //vytvorenie output filu pre vystup po spusteni parse.php
@@ -231,7 +231,7 @@ function runTimeOfProgram()
 
                     //Iba ak je parseOnly tak porovnavam cez JAVA ...
                 if($parseOnly == 1)
-                    $outputOfJavaController = shell_exec("java -jar ".$jExamPath."jexamxml.jar $outputFile  $refferenceOutput delta.xml".$jExamPath."options");
+                    $outputOfJavaController = shell_exec("java -jar ".$jExamPath."jexamxml.jar $outputFile $refferenceOutput delta.xml ".$jExamPath."options");
                 
                 
                 if ($exitCode == $programRefferenceErrorCode && $parseOnly != 1 && $exitCode > 0)
@@ -250,7 +250,8 @@ function runTimeOfProgram()
                     
                     if($exitCode == 0)
                     {
-                        if(preg_match("/.+Two files are identical$/", $outputOfJavaController))
+						  		//echo "$outputOfJavaController\n";
+                        if(preg_match("/Two files are identical/", $outputOfJavaController))
                         {
                                 //Zapis do HTML do CORRECT ze sedi exit code aj je zhodna JAVA
                             $correctTests +=1;
@@ -263,7 +264,7 @@ function runTimeOfProgram()
                                 //Zapis do HTML do INCORRECT ze nie je identicka JAVA
                                 $fileHTML = str_replace($directory, "", $file);
                             $failedTestsString = $failedTestsString."<div>".$fileHTML."</div>";
-                            // echo "Java tester unmatched";
+                            // echo "Java tester unmatched\n";
                         }
                     }
                     else
@@ -279,7 +280,8 @@ function runTimeOfProgram()
                 else
                 {
                         //Zapis chyby do HTML do INCORRECT
-                    $fileHTML = str_replace($directory, "", $file);
+                   // echo "FAILED\n";
+						  $fileHTML = str_replace($directory, "", $file);
                     $failedTestsString = $failedTestsString."<div>".$fileHTML."</div>";
                     // echo "Exit Code unmatched: $file";
                     continue;
@@ -414,7 +416,7 @@ function runTimeOfProgram()
                 font-weight: 500;
             }
 
-            #testBpx h2{
+            #testBox h2{
                 font-size: 1.5em;
                 width: 100%;
                 text-align: center;
