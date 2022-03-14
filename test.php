@@ -230,6 +230,25 @@ function processArgument()
             fwrite(STDERR, "ERROR 10 - unexpected combination of arguments\n");
             exit(10);
         }
+
+        echo("This is Help section of test.php\n\n");
+        echo("==========================================================================\n\n");
+        echo("This program supports just one argument\n\n");
+        echo("      --help      -shows help section of parser.php\n\n");
+        echo("      --parse-script=      -Argument takes link to the parse script and his name\n");
+        echo("                            If not used, test.php will use \"parse.php\" in current folder\n\n");
+        echo("      --int-script=      -Argument takes link to the intepret script and his name\n");
+        echo("                            If not used, test.php will use \"interpret.py\" in current folder\n\n");
+        echo("      --jexampath=      -Link to the comparator of XML files. If not used, test.php will use \"/pub/courses/ipp/jexamxml/\" \n\n");
+        echo("      --parse-only      -Tests only parser in --parse-script or parse.php\n\n");
+        echo("      --int-only        -Tests only intepret in --int-script or interpret.py\n\n");
+        echo("      --recursive       -Recursive folder searching\n\n");
+        echo("      --no-clean        -No cleaning after test.php execution\n\n");
+        echo("==========================================================================\n\n");
+        echo("The program can by run as:\n");
+        echo "      \$php parser.php [--help] [--directory=] [--parse-script=] [--int-script=] [--jexampath=] [--parse-only] [--int-only] [--recursive] [--noclean]\n\n";
+        echo("==========================================================================\n\n");
+        exit(0);
     }
 
     if ((array_key_exists('directory', $options)))
@@ -253,11 +272,11 @@ function processArgument()
     
     if ((array_key_exists('int-script', $options)))
     {
-        $parseScript = $options["int-script"];
+        $intScript = $options["int-script"];
     }
     else
     {
-        $parseScript = "interpret.py";
+        $intScript = "interpret.py";
     }
     
     if ((array_key_exists('jexampath', $options)))
@@ -277,14 +296,15 @@ function processArgument()
     $intOnly = array_key_exists('int-only', $options);
     $recursive = array_key_exists('recursive', $options);
     $noClean = array_key_exists('noclean', $options);
+    //echo "parseOnly: $parseOnly, intOnly: $intOnly,recursive: $recursive, noCleam: $noClean";
 
-    if ($parseOnly && (array_key_exists('int-script', $options) or $intOnly))
+    if ($parseOnly == 1 && (array_key_exists('int-script', $options) or $intOnly == 1))
     {
         fwrite(STDERR, "ERROR 41 - Invalid combination of arguments\n");
         exit(10);
     } 
     
-    if ($intOnly && (array_key_exists('parse-script', $options) or $parseOnly or array_key_exists('jexampath', $options)))
+    if ($intOnly ==1  && (array_key_exists('parse-script', $options) or $parseOnly == 1 or array_key_exists('jexampath', $options)))
     {
         fwrite(STDERR, "ERROR 41 - Invalid combination of arguments\n");
         exit(10);
@@ -293,11 +313,112 @@ function processArgument()
 }
 
 
+function runTimeOfProgram()
+{
+    global $argc, $argv, $recursive, $directory, $parseScript, $intScript, $parseOnly, $intOnly, $noClean, $jExamPath;
 
+        //jedna sa o rekurzivne prehladavanie
+    if($recursive == 1)
+    {
+        $arrayOfFiles = scandir($directory, 0);
+        $it = new RecursiveDirectoryIterator($directory);
+        $arrayOfFiles = new RecursiveIteratorIterator($it);
+        
+    }
+    else
+    {
+        $arrayOfFiles = scandir($directory, 0);
+            //TODO try catch if not file existing
+
+    }
+    //print_r($arrayOfFiles);
+    
+        //TODO vyfiltrovat files.src a cez ne spravit foreach
+
+    
+
+    foreach ($arrayOfFiles as $file)
+    {
+        $file = str_replace($directory, "", $file);
+        
+        // testovanie pre parser
+        if (preg_match("/.+\.src$/", $file))
+        {
+        
+            if($intOnly != 1)
+            {
+                    //vytvorenie output filu pre vystup po spusteni parse.php
+                $outputFile = preg_replace("/\.src$/", "/_out.out", $file);
+
+                    //spustenie parse.php
+                shell_exec("php $parseScript <$file >$outputFile");
+                    //este raz spustenie parse.php kvoli exit kodu
+                exec("php $parseScript <$file",$outputArray, $exitCode);
+                echo $exitCode;
+
+                $refferenceOutput = preg_replace("/src$/", "out", $file);
+                $refferenceErrorOutput = preg_replace("/src$/", "rc", $file);
+                $outputOfJavaController = shell_exec("java -jar /pub/courses/ipp/jexamxml/jexamxml.jar $outputFile  $refferenceOutput delta.xml /pub/courses/ipp/jexamxml/options");
+                    //TODO zabal do try-catch a ak nastane error tak vygeneruj subor *.rc a vloz do neho 0 ako exit code
+                $parseRefferenceErrorCode = shell_exec("cat $refferenceErrorOutput");
+
+
+                if($exitCode == $parseRefferenceErrorCode)
+                {
+                    //TODO zhodny exit code, treba osetrit aj parse-only testing aj cely testing
+                    echo "Correct exit Code\n";
+                }
+                else if ($parseOnly != 1)
+                {
+                    // PASS, exit code sa pozrie pri spracovani interpretu
+                }
+                else
+                {
+                    echo "Exit Code unmatched: $file";
+                }
+                
+                if($exitCode == 0)
+                {
+                    if(preg_match("/.+Two files are identical$/", $outputOfJavaController))
+                    {
+                        echo "Correct Java tester Output\n";
+                    }
+                    else
+                    {
+                        echo "Java tester unmatched";
+                    }
+                }
+
+                
+            } 
+        }
+
+
+
+            //Zacina testovanie pre interpret
+        if($parseOnly != 1)
+        {
+            
+            //python $intScript --source=*.src/*_out.out 
+        }
+
+
+    
+
+    
+    }
+
+    //echo $outputOfShell;
+
+
+}
 
 
 
 
 processArgument();
+runTimeOfProgram();
+
+
 
 ?>

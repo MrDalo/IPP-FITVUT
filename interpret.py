@@ -76,7 +76,7 @@ class symtableClass:
         varSplit = item.split("@")
         frame = varSplit[0]
         variableName = varSplit[1]
-        if frame == "LF":
+        if frame == "TF":
             self.TF.items[variableName] = [newValue, newDataType]
         elif frame == "GF":
             self.frames[0].items[variableName] = [newValue, newDataType]
@@ -90,10 +90,13 @@ class symtableClass:
         if not self.findItem(item):
             if varSplit[0] == "GF":
                 self.frames[0].items[varSplit[1]] = ["", None]                
+                self.frames[0].len+=1   
             elif varSplit[0] == "LF":
                 self.frames[self.maxIndex].items[varSplit[1]] = ["", None]                
+                self.frames[self.maxIndex].len+=1               
             else:
                 self.TF.items[varSplit[1]] = ["", None]                
+                self.TF.len += 1    
         
         else:
             print("Error - Redefinition of variable", file = sys.stderr)
