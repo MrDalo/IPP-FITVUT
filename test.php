@@ -237,8 +237,8 @@ function runTimeOfProgram()
                 if ($exitCode == $programRefferenceErrorCode && $parseOnly != 1 && $exitCode > 0)
                 {
                     $correctTests +=1;
-                    $file = str_replace($directory, "", $file);
-                    $correctTestsString = $correctTestsString."<div>".$file."</div>";
+                    $fileHTML = str_replace($directory, "", $file);
+                    $correctTestsString = $correctTestsString."<div>".$fileHTML."</div>";
                     continue;
                 }
                 else if ($parseOnly != 1)
@@ -254,15 +254,15 @@ function runTimeOfProgram()
                         {
                                 //Zapis do HTML do CORRECT ze sedi exit code aj je zhodna JAVA
                             $correctTests +=1;
-                            $file = str_replace($directory, "", $file);
-                            $correctTestsString = $correctTestsString."<div>".$file."</div>";
+                            $fileHTML = str_replace($directory, "", $file);
+                            $correctTestsString = $correctTestsString."<div>".$fileHTML."</div>";
                             // echo "Correct Java tester Output\n";
                         }
                         else
                         {
                                 //Zapis do HTML do INCORRECT ze nie je identicka JAVA
-                                $file = str_replace($directory, "", $file);
-                            $failedTestsString = $failedTestsString."<div>".$file."</div>";
+                                $fileHTML = str_replace($directory, "", $file);
+                            $failedTestsString = $failedTestsString."<div>".$fileHTML."</div>";
                             // echo "Java tester unmatched";
                         }
                     }
@@ -270,8 +270,8 @@ function runTimeOfProgram()
                     {
                         //Zapis do HTML ze mam zhodny exitcode > 0, do CORRECT
                         $correctTests +=1;
-                        $file = str_replace($directory, "", $file);
-                        $correctTestsString = $correctTestsString."<div>".$file."</div>";
+                        $fileHTML = str_replace($directory, "", $file);
+                        $correctTestsString = $correctTestsString."<div>".$fileHTML."</div>";
                     }
 
                 
@@ -279,8 +279,8 @@ function runTimeOfProgram()
                 else
                 {
                         //Zapis chyby do HTML do INCORRECT
-                    $file = str_replace($directory, "", $file);
-                    $failedTestsString = $failedTestsString."<div>".$file."</div>";
+                    $fileHTML = str_replace($directory, "", $file);
+                    $failedTestsString = $failedTestsString."<div>".$fileHTML."</div>";
                     // echo "Exit Code unmatched: $file";
                     continue;
                 }          
@@ -306,28 +306,28 @@ function runTimeOfProgram()
                     {
                         //Zapis do CORRECT
                         $correctTests +=1;
-                        $file = str_replace($directory, "", $file);
-                        $correctTestsString = $correctTestsString."<div>".$file."</div>";
+                        $fileHTML = str_replace($directory, "", $file);
+                        $correctTestsString = $correctTestsString."<div>".$fileHTML."</div>";
                     }
                     else
                     {
                         //Zapis do INCORRECT
-                        $file = str_replace($directory, "", $file);
-                        $failedTestsString = $failedTestsString."<div>".$file."</div>";
+                        $fileHTML = str_replace($directory, "", $file);
+                        $failedTestsString = $failedTestsString."<div>".$fileHTML."</div>";
                     }
             
                 }
                 else
                 {
                     //Zapis do INCORRECT nezhodny exit code
-                    $file = str_replace($directory, "", $file);
-                    $failedTestsString = $failedTestsString."<div>".$file."</div>";
+                    $fileHTML = str_replace($directory, "", $file);
+                    $failedTestsString = $failedTestsString."<div>".$fileHTML."</div>";
                 }
             }
 
             if($noClean != 1)
             {
-                $command = "rm -f $intOutputFile";
+                $command = "rm -f *_out.out";
                 shell_exec($command);
             }
             
