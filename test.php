@@ -68,7 +68,7 @@ function processArgument()
 
     if ($directory[strlen($directory) - 1] !="/")
     {
-        $directory += '/';
+        $directory =$directory.'/';
     }
     
     if ((array_key_exists('parse-script', $options)))
@@ -145,7 +145,7 @@ function processArgument()
 
 function runTimeOfProgram()
 {
-    global $argc, $argv, $recursive, $directory, $parseScript, $intScript, $parseOnly, $intOnly, $noClean, $jExamPath, $html;
+    global $argc, $argv, $recursive, $directory, $parseScript, $intScript, $parseOnly, $intOnly, $noClean, $jExamPath, $html, $correctTestsString, $failedTestsString, $testingPart, $srcCounter, $correctTests;
     $srcCounter = 0;
     $correctTests = 0;
     $correctTestsString = "";
@@ -489,17 +489,17 @@ $html = "<!DOCTYPE html>
     <div id=\"header\">
         <h1>IPP project 2022</h1>
         <div>
-            <p>Correct answers: 15/40</p>
-            <meter id=\"correctAnswers\" value=\"15\" min=\"0\" max=\"40\"> 
+            <p>Correct answers: $correctTests/$srcCounter</p>
+            <meter id=\"correctAnswers\" value=\"$correctTests\" min=\"0\" max=\"$srcCounter\"> 
         </div>
         <div id=\"author\">
             Author: Dalibor Králik - xkrali20
         </div>
     </div>
     <div id=\"testBox\">
-        <h1>$testingPart tests 5/20</h1>
+        <h1>$testingPart tests $correctTests/$srcCounter</h1>
         <div class=\"Meter\">
-            <meter value=\"5\" min=\"0\" max=\"20\"></meter>
+            <meter value=\"$correctTests\" min=\"0\" max=\"$srcCounter\"></meter>
         </div>
         <div class=\"correct\">
             <h2>Correct</h2>
