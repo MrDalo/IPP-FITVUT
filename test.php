@@ -229,7 +229,7 @@ function runTimeOfProgram()
             {
 
                     //spustenie parse.php, s exit kodom
-                exec("php $parseScript <$file >$outputFile 2>/dev/null",$outputArray, $exitCode);
+                exec("php8.1 $parseScript <$file >$outputFile 2>/dev/null",$outputArray, $exitCode);
 
                     //Iba ak je parseOnly tak porovnavam cez JAVA ...
                 if($parseOnly == 1)
