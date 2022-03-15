@@ -978,6 +978,7 @@ class interpreter:
             if not self.isLabel(instruction.find('arg1')):
                 print("Error - Call without valid LABEL", file = sys.stderr)
                 sys.exit(53)
+            
 
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
             if symbValue1 == None:
@@ -985,6 +986,10 @@ class interpreter:
             symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
             if symbValue2 == None:
                 symbValue2 = ""
+            
+            if symbDataType1 == 'string' and symbDataType2 == 'string':
+                symbValue1 = self.stringConversion(symbValue1)
+                symbValue2 = self.stringConversion(symbValue2)
             
             if symbDataType1 != symbDataType2 and symbDataType1 != 'nil' and symbDataType2 != 'nil':
                 print("Error - 5Not same type or nil operands type", file = sys.stderr)
@@ -996,6 +1001,7 @@ class interpreter:
                 except:
                     print("Error - Undefined LABEL call", file = sys.stderr)
                     sys.exit(52)
+            
             
 
         elif opcode == list(self.instructions.keys())[31]:#JUMPIFNEQ
@@ -1009,6 +1015,10 @@ class interpreter:
             symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
             if symbValue2 == None:
                 symbValue2 = ""
+
+            if symbDataType1 == 'string' and symbDataType2 == 'string':
+                symbValue1 = self.stringConversion(symbValue1)
+                symbValue2 = self.stringConversion(symbValue2)
 
             if symbDataType1 != symbDataType2 and symbDataType1 != 'nil' and symbDataType2 != 'nil':
                 print("Error - 6Not same type or nil operands type", file = sys.stderr)
@@ -1176,9 +1186,8 @@ def programmeRunner(sourceFile, inputFile):
         # Sorting of instructions and check order
     listOfInstructions.sort(key=sortingCriteria)
     
-    counterIndex = -1
+    counterIndex = 0
     for instruction in listOfInstructions:
-        counterIndex = counterIndex + 1
         reader.orderChecker(instruction.attrib.get('order'))
 
             # check redefinition of LABEL
@@ -1189,6 +1198,8 @@ def programmeRunner(sourceFile, inputFile):
                     sys.exit(52)
             except:
                 arrayOfLabels[instruction.find('arg1').text] = counterIndex 
+        
+        counterIndex = counterIndex + 1
 
       
     # TODO ak budem kontrolovat existenciu LABELu, pouzi pole arrayOfLabels cez try-except a hlada kluc
