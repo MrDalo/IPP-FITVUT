@@ -195,7 +195,10 @@ function runTimeOfProgram()
 
     foreach ($arrayOfFiles as $file)
     {
-    	  $file = $directory.$file;
+	 	  if($recursive != 1)
+		  {
+    	  		$file = $directory.$file;
+		  }
 	 	  // testovanie pre parser
         if (preg_match("/.+\.src$/", $file))
         {
@@ -290,11 +293,14 @@ function runTimeOfProgram()
             {
                 if($intOnly != 1)
                 {
-                    $intOutputFile =$file;
-                    $file = preg_replace("/_out\.out$/",".src", $file);
-                }
-                $intOutputFile = preg_replace("/\.src$/", "_out.out", $file);
-
+                 		$file = preg_replace("/\.src$/", "_out.out", $file);
+   					   $intOutputFile =preg_replace("/_out\.out$/", "_out2.out", $file);
+             		  //echo "$file\n";
+				 	 }
+					 else
+					 {
+							$intOutputFile = preg_replace("/\.src$/", "_out.out", $file);
+					 }
                 exec("python3.8 $intScript --source=$file --input=$inFile >$intOutputFile 2>/dev/null",$outputArray, $exitCode);
                 
                 if($exitCode == $programRefferenceErrorCode)
@@ -303,29 +309,32 @@ function runTimeOfProgram()
                     if($exitCode == 0)
                     {
                         //Zapis do CORRECT
-                        $correctTests +=1;
+								$correctTests +=1;
                         $fileHTML = str_replace($directory, "", $file);
-                        $correctTestsString = $correctTestsString."<div>".$fileHTML."</div>";
+      					   $fileHTML =preg_replace("/_out\.out$/", ".src", $fileHTML);
+                       $correctTestsString = $correctTestsString."<div>".$fileHTML."</div>";
                     }
                     else
                     {
-                        //Zapis do INCORRECT
+					  			//Zapis do INCORRECT
                         $fileHTML = str_replace($directory, "", $file);
+       					   $fileHTML =preg_replace("/_out\.out$/", ".src", $fileHTML);
                         $failedTestsString = $failedTestsString."<div>".$fileHTML."</div>";
                     }
             
                 }
                 else
                 {
-                    //Zapis do INCORRECT nezhodny exit code
+		  					//Zapis do INCORRECT nezhodny exit code
                     $fileHTML = str_replace($directory, "", $file);
-                    $failedTestsString = $failedTestsString."<div>".$fileHTML."</div>";
+      				  $fileHTML =preg_replace("/_out\.out$/", ".src", $fileHTML);
+                   $failedTestsString = $failedTestsString."<div>".$fileHTML."</div>";
                 }
             }
 
             if($noClean != 1)
             {
-                $command = "rm -f $outputFile";
+                $command = "rm -f $outputFile $intOutputFile";
                 shell_exec($command);
             }
             
