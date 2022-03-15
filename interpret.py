@@ -979,6 +979,11 @@ class interpreter:
                 print("Error - Call without valid LABEL", file = sys.stderr)
                 sys.exit(53)
             
+            try:
+                newPosition = int(self.arrayOfLabels[instruction.find('arg1').text])
+            except:
+                print("Error - Undefined LABEL call", file = sys.stderr)
+                sys.exit(52)
 
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
             if symbValue1 == None:
@@ -996,11 +1001,7 @@ class interpreter:
                 sys.exit(53)
 
             if symbValue1 == symbValue2:
-                try:
-                    i = int(self.arrayOfLabels[instruction.find('arg1').text])
-                except:
-                    print("Error - Undefined LABEL call", file = sys.stderr)
-                    sys.exit(52)
+                i = newPosition
             
             
 
@@ -1008,6 +1009,12 @@ class interpreter:
             if not self.isLabel(instruction.find('arg1')):
                 print("Error - Call without valid LABEL", file = sys.stderr)
                 sys.exit(53)
+            
+            try:
+                newPosition = int(self.arrayOfLabels[instruction.find('arg1').text])
+            except:
+                print("Error - Undefined LABEL call", file = sys.stderr)
+                sys.exit(52)
 
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
             if symbValue1 == None:
@@ -1025,11 +1032,7 @@ class interpreter:
                 sys.exit(53)
 
             if symbValue1 != symbValue2:
-                try:
-                    i = int(self.arrayOfLabels[instruction.find('arg1').text])
-                except:
-                    print("Error - Undefined LABEL call", file = sys.stderr)
-                    sys.exit(52)
+                i = newPosition
         
         elif opcode == list(self.instructions.keys())[32]:#EXIT
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg1')
