@@ -229,11 +229,6 @@ function runTimeOfProgram()
                     //spustenie parse.php, s exit kodom
                 exec("php8.1 $parseScript <$file >$outputFile 2>/dev/null",$outputArray, $exitCode);
 
-                    //Iba ak je parseOnly tak porovnavam cez JAVA ...
-                if($parseOnly == 1)
-                    $outputOfJavaController = shell_exec("java -jar ".$jExamPath."jexamxml.jar $outputFile $refferenceOutput delta.xml ".$jExamPath."options");
-                
-                
                 if ($exitCode == $programRefferenceErrorCode && $parseOnly != 1 && $exitCode > 0)
                 {
                     $correctTests +=1;
@@ -250,7 +245,8 @@ function runTimeOfProgram()
                     
                     if($exitCode == 0)
                     {
-						  		//echo "$outputOfJavaController\n";
+						  		$outputOfJavaController = shell_exec("java -jar ".$jExamPath."jexamxml.jar $outputFile $refferenceOutput delta.xml ".$jExamPath."options");
+						  			//echo "$outputOfJavaController\n";
                         if(preg_match("/Two files are identical/", $outputOfJavaController))
                         {
                                 //Zapis do HTML do CORRECT ze sedi exit code aj je zhodna JAVA
@@ -270,7 +266,7 @@ function runTimeOfProgram()
                     else
                     {
                         //Zapis do HTML ze mam zhodny exitcode > 0, do CORRECT
-                        $correctTests +=1;
+					 			$correctTests +=1;
                         $fileHTML = str_replace($directory, "", $file);
                         $correctTestsString = $correctTestsString."<div>".$fileHTML."</div>";
                     }
