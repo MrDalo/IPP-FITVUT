@@ -1034,7 +1034,7 @@ class interpreter:
                 print("Error - 6Not same type or nil operands type", file = sys.stderr)
                 sys.exit(53)
             
-            if  symbDataType1 == None or symbDataType2 == None:
+            if  self.isVarNone(symbDataType1) or self.isVarNone(symbDataType2):
                 sys.exit(56)
 
             if symbValue1 != symbValue2:
