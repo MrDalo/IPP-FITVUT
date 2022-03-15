@@ -996,7 +996,7 @@ class interpreter:
                 symbValue1 = self.stringConversion(symbValue1)
                 symbValue2 = self.stringConversion(symbValue2)
             
-            if symbDataType1 != symbDataType2 and symbDataType1 != 'nil' and symbDataType2 != 'nil':
+            if (symbDataType1 != symbDataType2 and symbDataType1 != 'nil' and symbDataType2 != 'nil') or symbDataType1 == None or symbDataType2 == None:
                 print("Error - 5Not same type or nil operands type", file = sys.stderr)
                 sys.exit(53)
 
@@ -1027,7 +1027,7 @@ class interpreter:
                 symbValue1 = self.stringConversion(symbValue1)
                 symbValue2 = self.stringConversion(symbValue2)
 
-            if symbDataType1 != symbDataType2 and symbDataType1 != 'nil' and symbDataType2 != 'nil':
+            if (symbDataType1 != symbDataType2 and symbDataType1 != 'nil' and symbDataType2 != 'nil') or symbDataType1 == None or symbDataType2 == None:
                 print("Error - 6Not same type or nil operands type", file = sys.stderr)
                 sys.exit(53)
 
