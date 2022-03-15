@@ -287,7 +287,8 @@ function runTimeOfProgram()
                 }          
                 
             } 
-        
+       		
+				$intOutputFile = "";
                 //Zacina testovanie pre interpret
             if($parseOnly != 1)
             {
