@@ -329,7 +329,7 @@ function runTimeOfProgram()
 
             if($noClean != 1)
             {
-                $command = "rm -f *_out.out";
+                $command = "rm -f $outputFile";
                 shell_exec($command);
             }
             
