@@ -390,6 +390,7 @@ class interpreter:
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
             symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
             
+            
 
             if self.isVarNone(symbDataType1) or self.isVarNone(symbDataType2):
                 print("Error - None in variable, empty variable", file = sys.stderr)
@@ -420,6 +421,7 @@ class interpreter:
             
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
             symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
+            
 
             if self.isVarNone(symbDataType1) or self.isVarNone(symbDataType2):
                 print("Error - None in variable, empty variable", file = sys.stderr)
@@ -450,6 +452,7 @@ class interpreter:
             
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
             symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
+            
 
             if self.isVarNone(symbDataType1) or self.isVarNone(symbDataType2):
                 print("Error - None in variable, empty variable", file = sys.stderr)
@@ -481,6 +484,7 @@ class interpreter:
             
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
             symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
+            
 
             if self.isVarNone(symbDataType1) or self.isVarNone(symbDataType2):
                 print("Error - None in variable, empty variable", file = sys.stderr)
@@ -515,6 +519,10 @@ class interpreter:
             
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
             symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
+            if symbValue1 == None:
+                symbValue1 = ""
+            if symbValue2 == None:
+                symbValue2 = ""
 
             if self.isVarNone(symbDataType1) or self.isVarNone(symbDataType2):
                 print("Error - None in variable, empty variable", file = sys.stderr)
@@ -552,6 +560,10 @@ class interpreter:
             
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
             symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
+            if symbValue1 == None:
+                symbValue1 = ""
+            if symbValue2 == None:
+                symbValue2 = ""
 
             if self.isVarNone(symbDataType1) or self.isVarNone(symbDataType2):
                 print("Error - None in variable, empty variable", file = sys.stderr)
@@ -589,6 +601,10 @@ class interpreter:
             
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
             symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
+            if symbValue1 == None:
+                symbValue1 = ""
+            if symbValue2 == None:
+                symbValue2 = ""
 
             if self.isVarNone(symbDataType1) or self.isVarNone(symbDataType2):
                 print("Error - None in variable, empty variable", file = sys.stderr)
@@ -626,6 +642,10 @@ class interpreter:
             
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
             symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
+            if symbValue1 == None:
+                symbValue1 = ""
+            if symbValue2 == None:
+                symbValue2 = ""
 
             if self.isVarNone(symbDataType1) or self.isVarNone(symbDataType2):
                 print("Error - None in variable, empty variable", file = sys.stderr)
@@ -653,6 +673,10 @@ class interpreter:
             
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
             symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
+            if symbValue1 == None:
+                symbValue1 = ""
+            if symbValue2 == None:
+                symbValue2 = ""
 
             if self.isVarNone(symbDataType1) or self.isVarNone(symbDataType2):
                 print("Error - None in variable, empty variable", file = sys.stderr)
@@ -679,6 +703,9 @@ class interpreter:
                     sys.exit(54)
             
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg2')
+            if symbValue1 == None:
+                symbValue1 = ""
+            
 
             if self.isVarNone(symbDataType1):
                 print("Error - None in variable, empty variable", file = sys.stderr)
