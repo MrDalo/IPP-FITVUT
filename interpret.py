@@ -835,6 +835,10 @@ class interpreter:
             symbIsVar1, symbValue1, symbDataType1 = self.isSymb(instruction, 'arg1')
             if symbValue1 == None:
                 symbValue1 = ""
+            
+            if self.isVarNone(symbDataType1):
+                print("Error - None in variable, empty variable", file = sys.stderr)
+                sys.exit(56)
             if symbDataType1 == 'string':
                 symbValue1 = self.stringConversion(symbValue1)
 
