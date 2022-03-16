@@ -590,15 +590,15 @@ class interpreter:
                 print("Error - None in variable, empty variable", file = sys.stderr)
                 sys.exit(56)
 
-            if symbDataType1 != symbDataType2 and symbDataType1 != None and symbDataType2 != None:
-                print("Error - 3Not same operands types", file = sys.stderr)
+            if symbDataType1 != symbDataType2 and symbDataType1 != 'nil' and symbDataType2 != 'nil':
+                print("Error - Not same operands types", file = sys.stderr)
                 sys.exit(53)
 
             if symbDataType1 == 'string' and symbDataType2 == 'string':
                 symbValue1 = self.stringConversion(symbValue1)
                 symbValue2 = self.stringConversion(symbValue2)
 
-            if symbDataType1 == 'int' and symbDataType1 != None and symbDataType2 != None:
+            if symbDataType1 == 'int' and symbDataType1 != 'nil' and symbDataType2 != 'nil':
                 if int(symbValue1) == int(symbValue2):
                     self.symtable.updateItem(instruction.find('arg1').text, 'true', 'bool')
                 else:
