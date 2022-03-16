@@ -528,7 +528,7 @@ class interpreter:
                 print("Error - None in variable, empty variable", file = sys.stderr)
                 sys.exit(56)
 
-            if symbDataType1 != symbDataType2:
+            if symbDataType1 != symbDataType2 or symbDataType1 == 'nil' or symbDataType2 == 'nil':
                 print("Error - 1Not same operands types", file = sys.stderr)
                 sys.exit(53)
 
@@ -569,7 +569,7 @@ class interpreter:
                 print("Error - None in variable, empty variable", file = sys.stderr)
                 sys.exit(56)
 
-            if symbDataType1 != symbDataType2:
+            if symbDataType1 != symbDataType2 or symbDataType1 == 'nil' or symbDataType2 == 'nil':
                 print("Error - 2Not same operands types", file = sys.stderr)
                 sys.exit(53)
 
