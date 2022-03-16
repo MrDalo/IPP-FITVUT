@@ -878,6 +878,9 @@ class interpreter:
             if symbValue2 == None:
                 symbValue2 = ""
 
+            if  symbDataType1 == None or symbDataType2 == None:
+                sys.exit(56)
+
             if symbDataType1 != 'string'  or symbDataType2 != 'int':
                 print("Error - Not string or integer operands types", file = sys.stderr)
                 sys.exit(53)
