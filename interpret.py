@@ -1077,6 +1077,10 @@ class interpreter:
         elif opcode == list(self.instructions.keys())[34]:#BREAK
             print(f'Position in code: {i}, content of frame: {self.stack}, number of executed instructions: {self.numberOfInstructions}', file = sys.stderr)
 
+        else:
+            print("Error - Bad Operation code", file = sys.stderr)
+            sys.exit(22)
+
         return i
 
 
