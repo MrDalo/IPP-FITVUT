@@ -937,6 +937,7 @@ class interpreter:
                     sys.exit(54)
                 else:
                     newVariable = self.symtable.findItem(instruction.find('arg1').text)
+                    varDataType = newVariable[1]
                     if not newVariable[1] == "string":
                         print("Error - bad operand type", file = sys.stderr)
                         sys.exit(53)
@@ -954,7 +955,7 @@ class interpreter:
                 print("Error - empty string", file = sys.stderr)
                 sys.exit(58)
 
-            if self.isVarNone(symbDataType1) or self.isVarNone(symbDataType2):
+            if self.isVarNone(symbDataType1) or self.isVarNone(symbDataType2) or self.isVarNone(varDataType):
                 print("Error - None in variable, empty variable", file = sys.stderr)
                 sys.exit(56)
 
