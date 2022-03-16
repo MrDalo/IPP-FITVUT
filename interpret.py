@@ -524,7 +524,7 @@ class interpreter:
                 symbValue1 = self.stringConversion(symbValue1)
                 symbValue2 = self.stringConversion(symbValue2)
 
-            if symbDataType1 != 'int':
+            if symbDataType1 == 'int':
                 if int(symbValue1) < int(symbValue2):
                     self.symtable.updateItem(instruction.find('arg1').text, 'true', 'bool')
                 else:
@@ -561,7 +561,7 @@ class interpreter:
                 symbValue1 = self.stringConversion(symbValue1)
                 symbValue2 = self.stringConversion(symbValue2)
 
-            if symbDataType1 != 'int':
+            if symbDataType1 == 'int':
                 if int(symbValue1) > int(symbValue2):
                     self.symtable.updateItem(instruction.find('arg1').text, 'true', 'bool')
                 else:
@@ -590,7 +590,7 @@ class interpreter:
                 print("Error - None in variable, empty variable", file = sys.stderr)
                 sys.exit(56)
 
-            if symbDataType1 != symbDataType2:
+            if symbDataType1 != symbDataType2 and symbDataType1 != None and symbDataType2 != None:
                 print("Error - 3Not same operands types", file = sys.stderr)
                 sys.exit(53)
 
@@ -598,7 +598,7 @@ class interpreter:
                 symbValue1 = self.stringConversion(symbValue1)
                 symbValue2 = self.stringConversion(symbValue2)
 
-            if symbDataType1 != 'int':
+            if symbDataType1 == 'int' and symbDataType1 != None and symbDataType2 != None:
                 if int(symbValue1) == int(symbValue2):
                     self.symtable.updateItem(instruction.find('arg1').text, 'true', 'bool')
                 else:
