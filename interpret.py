@@ -38,6 +38,10 @@ class symtableClass:
         self.TF = frame("TF")
 
     def pushFrame(self, frame):
+        if frame == None:
+            print("Error - Unexisted TF frame", file = sys.stderr)
+            sys.exit(55)
+
         frame.type = "LF"
         self.frames.append(frame)
         self.TF = None
