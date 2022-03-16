@@ -938,7 +938,7 @@ class interpreter:
                 else:
                     newVariable = self.symtable.findItem(instruction.find('arg1').text)
                     varDataType = newVariable[1]
-                    if not newVariable[1] == "string":
+                    if not newVariable[1] == "string" and not newVariable[1] == None:
                         print("Error - bad operand type", file = sys.stderr)
                         sys.exit(53)
                     if self.isVarNone(newVariable[1]):
