@@ -951,7 +951,12 @@ class interpreter:
                 symbValue1 = ""
             symbIsVar2, symbValue2, symbDataType2 = self.isSymb(instruction, 'arg3')
             if symbValue2 == None:
-                symbValue2 = ""
+                print("Error - empty string", file = sys.stderr)
+                sys.exit(58)
+
+            if self.isVarNone(symbDataType1) or self.isVarNone(symbDataType2):
+                print("Error - None in variable, empty variable", file = sys.stderr)
+                sys.exit(56)
 
             if symbDataType1 != 'int'  or symbDataType2 != 'string':
                 print("Error - Not string or integer operands types", file = sys.stderr)
