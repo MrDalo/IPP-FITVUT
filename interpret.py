@@ -882,6 +882,10 @@ class interpreter:
             if symbValue1 == None:
                 symbValue1 = ""
             symbValue1 = self.stringConversion(symbValue1)
+
+            if self.isVarNone(symbDataType1):
+                print("Error - None in variable, empty variable", file = sys.stderr)
+                sys.exit(56)
             
             if symbDataType1 != 'string':
                 print("Error - Not string operands types", file = sys.stderr)
