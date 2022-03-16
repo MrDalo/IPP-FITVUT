@@ -1214,11 +1214,10 @@ def programmeRunner(sourceFile, inputFile):
 
             # check redefinition of LABEL
         if((instruction.attrib.get('opcode').upper()) == "LABEL"):
-            try:
-                if(arrayOfLabels[instruction.find('arg1').text]):
+            if instruction.find('arg1').text in arrayOfLabels:
                     print("Error - redefinition of LABEL", file = sys.stderr)
-                    sys.exit(52)
-            except:
+                    exit(52)
+            else:
                 arrayOfLabels[instruction.find('arg1').text] = counterIndex 
         
         counterIndex = counterIndex + 1
