@@ -1122,7 +1122,7 @@ class interpreter:
             print(f'Position in code: {i}, content of frame: {self.stack}, number of executed instructions: {self.numberOfInstructions}', file = sys.stderr)
         else:
             print("Error - Bad Operation code", file = sys.stderr)
-            sys.exit(22)
+            sys.exit(32)
 
         return i
 
@@ -1160,6 +1160,11 @@ class xmlReader:
     def orderChecker(self, externalOrder):
         if externalOrder == None:
             print("Error - missing instruction order", file = sys.stderr)
+            sys.exit(32)
+        try:
+            int(externalOrder)
+        except:
+            print("Error - Unable to convert Order", file = sys.stderr)
             sys.exit(32)
 
         if int(self.instructionOrder) < int(externalOrder):
@@ -1253,7 +1258,9 @@ def programmeRunner(sourceFile, inputFile):
     
     counterIndex = 0
     for instruction in listOfInstructions:
-        reader.orderChecker(instruction.attrib.get('order'))
+        if not reader.orderChecker(instruction.attrib.get('order')):
+            print("Error - missing order", file = sys.stderr)
+            exit(32)
 
             # check redefinition of LABEL
         if((instruction.attrib.get('opcode').upper()) == "LABEL"):
