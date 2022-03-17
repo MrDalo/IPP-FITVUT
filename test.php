@@ -160,6 +160,7 @@ function runTimeOfProgram()
     $correctTests = 0;
     $correctTestsString = "";
     $failedTestsString = "";
+	$onlyOneFile = false;
 
     if($parseOnly == 1)
     {
@@ -203,6 +204,7 @@ function runTimeOfProgram()
 		if(preg_match('/.+\.src$/', $directory))
 		{
 			$arrayOfFiles = [$directory];	
+			$onlyOneFile = true;
 		}
 		else
 		{
@@ -215,7 +217,7 @@ function runTimeOfProgram()
 
     foreach ($arrayOfFiles as $file)
     {
-	 	  if($recursive != 1)
+	 	  if($recursive != 1 and !$onlyOneFile)
 		  {
     	  		$file = $directory.$file;
 		  }
