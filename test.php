@@ -588,7 +588,7 @@ function runTimeOfProgram()
         <div id=\"header\">
             <h1>IPP project 2022</h1>
             <div>
-                <p>Correct answers: $correctTests/$srcCounter</p>
+                <p>Correct tests: $correctTests/$srcCounter</p>
                 <meter id=\"correctAnswers\" value=\"$correctTests\" min=\"0\" max=\"$srcCounter\"> 
             </div>
             <div id=\"author\">
