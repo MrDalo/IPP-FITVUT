@@ -824,10 +824,14 @@ class interpreter:
                 else:
                     value = 'false'
             elif typeValue == 'string' and value != None:
+                if value == "":
+                    value = "nil"
+                    typeValue = "nil"
+
                 value = self.stringConversion(value)
             
-            if value == None:
-                value = ""
+            if value == None or value == "":
+                value = "nil"
                 typeValue = "nil"
 
             self.symtable.updateItem(instruction.find('arg1').text, value, typeValue)
