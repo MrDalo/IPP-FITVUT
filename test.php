@@ -328,30 +328,53 @@ function runTimeOfProgram()
                 
                 if($exitCode == $programRefferenceErrorCode)
                 {
-                    exec("diff $intOutputFile $refferenceOutput", $outputArray, $exitCode);
                     if($exitCode == 0)
                     {
-                        //Zapis do CORRECT
-								$correctTests +=1;
-                        $fileHTML = str_replace($directory, "", $file);
-      					   $fileHTML =preg_replace("/_out\.out$/", ".src", $fileHTML);
-                       $correctTestsString = $correctTestsString."<div>".$fileHTML."</div>";
+                        exec("diff $intOutputFile $refferenceOutput", $outputArray, $exitCode);
+                        if($exitCode == 0)
+                        {
+                            //Zapis do CORRECT
+                            $correctTests +=1;
+                            if(!$onlyOneFile)
+                            {
+                                $fileHTML = str_replace($directory, "", $file);
+                            }
+                            $fileHTML =preg_replace("/_out\.out$/", ".src", $fileHTML);
+                            $correctTestsString = $correctTestsString."<div>".$fileHTML."</div>";
+                        }
+                        else
+                        {
+                                    //Zapis do INCORRECT
+                            if(!$onlyOneFile)
+                            {
+                                $fileHTML = str_replace($directory, "", $file);
+                            }
+                            $fileHTML =preg_replace("/_out\.out$/", ".src", $fileHTML);
+                            $failedTestsString = $failedTestsString."<div>".$fileHTML."</div>";
+                        }
                     }
                     else
                     {
-					  			//Zapis do INCORRECT
-                        $fileHTML = str_replace($directory, "", $file);
-       					   $fileHTML =preg_replace("/_out\.out$/", ".src", $fileHTML);
-                        $failedTestsString = $failedTestsString."<div>".$fileHTML."</div>";
+                        //Zapis do CORRECT
+                        $correctTests +=1;
+                        if(!$onlyOneFile)
+                        {
+                            $fileHTML = str_replace($directory, "", $file);
+                        }
+                        $fileHTML =preg_replace("/_out\.out$/", ".src", $fileHTML);
+                        $correctTestsString = $correctTestsString."<div>".$fileHTML."</div>";
                     }
-            
+
                 }
                 else
                 {
 		  					//Zapis do INCORRECT nezhodny exit code
-                    $fileHTML = str_replace($directory, "", $file);
-      				  $fileHTML =preg_replace("/_out\.out$/", ".src", $fileHTML);
-                   $failedTestsString = $failedTestsString."<div>".$fileHTML."</div>";
+                    if(!$onlyOneFile)
+                    {
+                        $fileHTML = str_replace($directory, "", $file);
+                    }
+      				$fileHTML =preg_replace("/_out\.out$/", ".src", $fileHTML);
+                    $failedTestsString = $failedTestsString."<div>".$fileHTML."</div>";
                 }
             }
 
