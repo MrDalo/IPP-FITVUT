@@ -71,7 +71,7 @@ function processArgument()
         $directory = getcwd();
     }
 
-    if ($directory[strlen($directory) - 1] !="/")
+    if ($directory[strlen($directory) - 1] !="/" and  !preg_match('/.+\.src$/', $directory))
     {
         $directory =$directory.'/';
     }
@@ -191,12 +191,13 @@ function runTimeOfProgram()
     }
     else
     {
+		
         if(!file_exists($directory))
         {
-            fwrite(STDERR, "ERROR 41\n");
+        
+			fwrite(STDERR, "ERROR 41\n");
             exit(41);
         }
-
         $arrayOfFiles = scandir($directory, 0);
         
 
