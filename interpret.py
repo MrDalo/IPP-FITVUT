@@ -1122,11 +1122,8 @@ class interpreter:
             if symbValue1 == None:
                 symbValue1 = ""
             print(symbValue1, file = sys.stderr)
-            
-            
         elif opcode == list(self.instructions.keys())[34]:#BREAK
             print(f'Position in code: {i}, content of frame: {self.stack}, number of executed instructions: {self.numberOfInstructions}', file = sys.stderr)
-
         else:
             print("Error - Bad Operation code", file = sys.stderr)
             sys.exit(22)
