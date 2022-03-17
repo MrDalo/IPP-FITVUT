@@ -821,16 +821,13 @@ class interpreter:
             elif typeValue == 'bool':
                 if value.lower() == 'true':
                     value = 'true'
-                elif value == "":
-                    value = "nil"
-                    typeValue = "nil"
                 else:
                     value = 'false'
             elif typeValue == 'string' and value != None:
                 value = self.stringConversion(value)
             
             if value == None:
-                value = "nil"
+                value = ""
                 typeValue = "nil"
 
             self.symtable.updateItem(instruction.find('arg1').text, value, typeValue)
