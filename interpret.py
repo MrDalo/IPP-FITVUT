@@ -1094,7 +1094,7 @@ class interpreter:
                 print("Error - 6Not same type or nil operands type", file = sys.stderr)
                 sys.exit(53)
             
-
+            print(f'prva: {symbValue1}, druha: {symbValue2}')
             if symbValue1 != symbValue2:
                 i = newPosition
         
