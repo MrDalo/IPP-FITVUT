@@ -56,6 +56,12 @@ function processArgument()
         exit(0);
     }
 
+    $parseOnly = array_key_exists('parse-only', $options);
+    $intOnly = array_key_exists('int-only', $options);
+    $recursive = array_key_exists('recursive', $options);
+    $noClean = array_key_exists('noclean', $options);
+
+
     if ((array_key_exists('directory', $options)))
     {
         $directory = $options["directory"];
@@ -70,36 +76,45 @@ function processArgument()
         $directory =$directory.'/';
     }
     
-    if ((array_key_exists('parse-script', $options)))
+    if ($intOnly != 1)
     {
-        $parseScript = $options["parse-script"];
-    }
-    else
-    {
-        $parseScript = "parse.php";
+        if ((array_key_exists('parse-script', $options)))
+        {
+            $parseScript = $options["parse-script"];
+        }
+        else
+        {
+            $parseScript = "parse.php";
+        }
+    
+        if(!file_exists($parseScript))
+        {
+            fwrite(STDERR, "ERROR 41\n");
+            exit(41);
+        }
+        
     }
 
-    if(!file_exists($parseScript))
-    {
-        fwrite(STDERR, "ERROR 41\n");
-        exit(41);
-    }
     
+    if ($parseOnly != 1)
+    {
+        if ((array_key_exists('int-script', $options)))
+        {
+            $intScript = $options["int-script"];
+        }
+        else
+        {
+            $intScript = "interpret.py";
+        }
+
+        if(!file_exists($intScript))
+        {
+            fwrite(STDERR, "ERROR 41\n");
+            exit(41);
+        }
     
-    if ((array_key_exists('int-script', $options)))
-    {
-        $intScript = $options["int-script"];
-    }
-    else
-    {
-        $intScript = "interpret.py";
     }
 
-    if(!file_exists($intScript))
-    {
-        fwrite(STDERR, "ERROR 41\n");
-        exit(41);
-    }
     
     if ((array_key_exists('jexampath', $options)))
     {
@@ -121,10 +136,6 @@ function processArgument()
         exit(41);
     }
 
-    $parseOnly = array_key_exists('parse-only', $options);
-    $intOnly = array_key_exists('int-only', $options);
-    $recursive = array_key_exists('recursive', $options);
-    $noClean = array_key_exists('noclean', $options);
     //echo "parseOnly: $parseOnly, intOnly: $intOnly,recursive: $recursive, noCleam: $noClean";
 
     if ($parseOnly == 1 && (array_key_exists('int-script', $options) or $intOnly == 1))
