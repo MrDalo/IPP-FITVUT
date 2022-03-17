@@ -411,7 +411,7 @@ class interpreter:
                 print("Error - Bad XML structure INT conversion", file = sys.stderr)
                 sys.exit(32)
             
-            self.symtable.updateItem(instruction.find('arg1').text, result, 'int')
+            self.symtable.updateItem(instruction.find('arg1').text, str(result), 'int')
 
 
 
@@ -441,7 +441,7 @@ class interpreter:
             except:
                 print("Error - Bad XML structure INT conversion", file = sys.stderr)
                 sys.exit(32)
-            self.symtable.updateItem(instruction.find('arg1').text, result, 'int')
+            self.symtable.updateItem(instruction.find('arg1').text, str(result), 'int')
 
 
 
@@ -473,7 +473,7 @@ class interpreter:
                 print("Error - Bad XML structure INT conversion", file = sys.stderr)
                 sys.exit(32)
             
-            self.symtable.updateItem(instruction.find('arg1').text, result, 'int')
+            self.symtable.updateItem(instruction.find('arg1').text, str(result), 'int')
 
 
 
@@ -508,7 +508,7 @@ class interpreter:
             except:
                 print("Error - Bad XML structure INT conversion", file = sys.stderr)
                 sys.exit(32)
-            self.symtable.updateItem(instruction.find('arg1').text, result, 'int')
+            self.symtable.updateItem(instruction.find('arg1').text, str(result), 'int')
 
 
 
@@ -791,7 +791,7 @@ class interpreter:
                 print("Error - Bad indexing", file = sys.stderr)
                 sys.exit(58)
 
-            self.symtable.updateItem(instruction.find('arg1').text, ord(symbValue1[symbValue2]), 'int')
+            self.symtable.updateItem(instruction.find('arg1').text, str(ord(symbValue1[symbValue2])), 'int')
 
 
         elif opcode == list(self.instructions.keys())[21]:#READ
@@ -900,7 +900,7 @@ class interpreter:
                 print("Error - Not string operands types", file = sys.stderr)
                 sys.exit(53)
 
-            self.symtable.updateItem(instruction.find('arg1').text, len(symbValue1), 'int')
+            self.symtable.updateItem(instruction.find('arg1').text, str(len(symbValue1)), 'int')
             
         elif opcode == list(self.instructions.keys())[25]:#GETCHAR
             if not self.isVariable(instruction.find('arg1')):
