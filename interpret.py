@@ -1096,6 +1096,7 @@ class interpreter:
             
             print(f'prva: {symbValue1}, druha: {symbValue2}')
             if symbValue1 != symbValue2:
+                print(f'INSIDE, {newPosition}, {i}')
                 i = newPosition
         
         elif opcode == list(self.instructions.keys())[32]:#EXIT
