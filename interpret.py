@@ -371,6 +371,9 @@ class interpreter:
         elif opcode == list(self.instructions.keys())[8]:#POPS
             if len(self.stack) > 0:
                 if self.isVariable(instruction.find('arg1')):
+                    if not self.symtable.findItem(instruction.find('arg1').text):
+                        print("Error - Unexisted variable", file = sys.stderr)
+                        sys.exit(54)
                     poppedValue = self.stack.pop()
                     self.symtable.updateItem(instruction.find('arg1').text, poppedValue[0], poppedValue[1])
                 else:
