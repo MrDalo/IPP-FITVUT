@@ -198,8 +198,16 @@ function runTimeOfProgram()
 			fwrite(STDERR, "ERROR 41\n");
             exit(41);
         }
-        $arrayOfFiles = scandir($directory, 0);
-        
+
+		
+		if(preg_match('/.+\.src$/', $directory))
+		{
+			$arrayOfFiles = [$directory];	
+		}
+		else
+		{
+        	$arrayOfFiles = scandir($directory, 0);
+        }
 
     }
    
