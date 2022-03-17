@@ -821,16 +821,15 @@ class interpreter:
             elif typeValue == 'bool':
                 if value.lower() == 'true':
                     value = 'true'
+                elif value == "":
+                    value = "nil"
+                    typeValue = "nil"
                 else:
                     value = 'false'
             elif typeValue == 'string' and value != None:
-                if value == "":
-                    value = "nil"
-                    typeValue = "nil"
-
                 value = self.stringConversion(value)
             
-            if value == None or value == "":
+            if value == None:
                 value = "nil"
                 typeValue = "nil"
 
