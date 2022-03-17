@@ -321,7 +321,6 @@ class interpreter:
             self.stack.append([i, 'int'])
             if self.isLabel(instruction.find('arg1')):
                 try:
-                    print(f'Before after: {i}')
                     i = int(self.arrayOfLabels[instruction.find('arg1').text])
                 except:
                     print("Error - Undefined LABEL call", file = sys.stderr)
@@ -330,8 +329,6 @@ class interpreter:
             else:
                 print("Error - Call without valid LABEL", file = sys.stderr)
                 sys.exit(53)
-
-            print(f'Call after: {i}')
 
         elif opcode == list(self.instructions.keys())[6]:#RETURN
             if len(self.stack) > 0:
@@ -349,8 +346,6 @@ class interpreter:
             else:
                 print("Error - Empty stack", file = sys.stderr)
                 sys.exit(56)
-            
-            print(f'RETURN: {i}')
 
 
 
@@ -1096,10 +1091,8 @@ class interpreter:
             if (symbDataType1 != symbDataType2 and symbDataType1 != 'nil' and symbDataType2 != 'nil'):
                 print("Error - 6Not same type or nil operands type", file = sys.stderr)
                 sys.exit(53)
-            
-            print(f'prva: {symbValue1}, druha: {symbValue2}')
+
             if symbValue1 != symbValue2:
-                print(f'INSIDE, {newPosition}, {i}')
                 i = newPosition
         
         elif opcode == list(self.instructions.keys())[32]:#EXIT
