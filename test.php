@@ -213,7 +213,7 @@ function runTimeOfProgram()
 
     }
    
-    
+    sort($arrayOfFiles);
 
     foreach ($arrayOfFiles as $file)
     {
