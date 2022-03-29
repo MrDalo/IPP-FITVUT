@@ -1161,8 +1161,9 @@ class xmlReader:
         if externalOrder == None:
             print("Error - missing instruction order", file = sys.stderr)
             sys.exit(32)
+
         try:
-            int(externalOrder)
+            controlVar = int(externalOrder)
         except:
             print("Error - Unable to convert Order", file = sys.stderr)
             sys.exit(32)
@@ -1272,8 +1273,6 @@ def programmeRunner(sourceFile, inputFile):
         
         counterIndex = counterIndex + 1
 
-      
-    # TODO ak budem kontrolovat existenciu LABELu, pouzi pole arrayOfLabels cez try-except a hlada kluc
     
 
     interpret = interpreter(arrayOfLabels, inputFile)
