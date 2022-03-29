@@ -213,8 +213,7 @@ function runTimeOfProgram()
 
     }
    
-    sort($arrayOfFiles);
-
+    
     foreach ($arrayOfFiles as $file)
     {
 	 	  if($recursive != 1 and !$onlyOneFile)
